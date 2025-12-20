@@ -203,7 +203,7 @@ export const signUp = async (req, res) => {
     });
 
     res.status(201).json(user);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: "Signup failed" });
   }
 };
@@ -233,7 +233,7 @@ export const login = async (req, res) => {
     });
 
     res.status(200).json(user);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: "Login failed" });
   }
 };
@@ -243,7 +243,7 @@ export const logOut = async (req, res) => {
   try {
     res.clearCookie("token");
     res.status(200).json({ message: "Logout success" });
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: "Logout failed" });
   }
 };
@@ -273,7 +273,7 @@ export const googleSignup = async (req, res) => {
     });
 
     res.status(200).json(user);
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: "Google signup failed" });
   }
 };
@@ -296,7 +296,7 @@ export const sendOtp = async (req, res) => {
     await sendMail(email, otp);
 
     res.status(200).json({ message: "OTP sent" });
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: "OTP failed" });
   }
 };
@@ -321,7 +321,7 @@ export const verifyOtp = async (req, res) => {
 
     await user.save();
     res.status(200).json({ message: "OTP verified" });
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: "OTP verify failed" });
   }
 };
@@ -341,7 +341,7 @@ export const resetPassword = async (req, res) => {
 
     await user.save();
     res.status(200).json({ message: "Password reset success" });
-  } catch (error) {
+  } catch {
     res.status(500).json({ message: "Reset password failed" });
   }
 };
