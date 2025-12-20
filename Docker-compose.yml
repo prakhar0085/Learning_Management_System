@@ -1,3 +1,26 @@
+# services:
+#   backend:
+#     build: ./server
+#     container_name: lmsbackend
+#     restart: always
+#     env_file:
+#       - ./server/.env
+#     ports:
+#       - "8000:8000"
+
+#   frontend:
+#     build:
+#       context: ./client
+#       args:
+#         VITE_API_URL: http://13.61.173.66:8000/api
+#     container_name: frontend
+#     restart: always
+#     ports:
+#       - "5173:5173"
+#     depends_on:
+#       - backend
+
+
 services:
   backend:
     build: ./server
@@ -13,6 +36,12 @@ services:
       context: ./client
       args:
         VITE_API_URL: http://13.61.173.66:8000/api
+        VITE_FIREBASE_API_KEY: ${VITE_FIREBASE_API_KEY}
+        VITE_FIREBASE_AUTH_DOMAIN: ${VITE_FIREBASE_AUTH_DOMAIN}
+        VITE_FIREBASE_PROJECT_ID: ${VITE_FIREBASE_PROJECT_ID}
+        VITE_FIREBASE_STORAGE_BUCKET: ${VITE_FIREBASE_STORAGE_BUCKET}
+        VITE_FIREBASE_MESSAGING_SENDER_ID: ${VITE_FIREBASE_MESSAGING_SENDER_ID}
+        VITE_FIREBASE_APP_ID: ${VITE_FIREBASE_APP_ID}
     container_name: frontend
     restart: always
     ports:
