@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { FaArrowLeft, FaEdit } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { serverUrl } from '../../App';
+import { serverUrl } from '../../config';
 import { ClipLoader } from 'react-spinners';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLectureData } from '../../redux/lectureSlice';

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { serverUrl } from '../App'
+import { serverUrl } from '../config';
 import { setAllReview } from '../redux/reviewSlice'
 import axios from 'axios'
 

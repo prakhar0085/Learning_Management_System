@@ -5,7 +5,7 @@ import { FaEdit } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { serverUrl } from '../../App';
+import { serverUrl } from '../../config';
 import { toast } from 'react-toastify';
 import { setCreatorCourseData } from '../../redux/courseSlice';
 import img1 from "../../assets/empty.jpg"
