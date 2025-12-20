@@ -29,7 +29,7 @@ import useGetAllReviews from './customHooks/useGetAllReviews'
 // export const serverUrl = "http://localhost:8000"
 
 // export const serverUrl = import.meta.env.VITE_API_URL;
-import { serverUrl } from "./config";
+
 
 
 
