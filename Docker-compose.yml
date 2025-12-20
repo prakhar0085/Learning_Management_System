@@ -6,13 +6,16 @@ services:
     env_file:
       - ./server/.env
     ports:
-    - "8000:8000"
+      - "8000:8000"
 
-  frontend:
-    build: ./client
-    container_name: lmsfrontend
-    restart: always
-    ports:
-      - "5173:5173"
-    depends_on:
-      - backend
+frontend:
+  build:
+    context: ./client
+    args:
+      VITE_API_URL: http://13.60.179.80:8000/api
+  container_name: frontend
+  restart: always
+  ports:
+    - "5173:5173"
+  depends_on:
+    - backend
