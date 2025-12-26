@@ -2,7 +2,7 @@
 LMS SAAS
 B2b
 
-elastic ip - 51.20.148.95
+elastic ip - 51.20.148.95 for ec2
 
 
 Component Details
