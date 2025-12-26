@@ -92,6 +92,7 @@
 ## 🏛️ Architecture
 
 ### System Architecture
+![Architecture_Diagram](LMS_Architecture.jpg).
 
 
 
