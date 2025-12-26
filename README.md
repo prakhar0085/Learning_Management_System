@@ -18,8 +18,7 @@
 - [Project Structure](#-project-structure)
 - [API Documentation](#-api-documentation)
 - [Deployment](#-deployment)
-- [Contributing](#-contributing)
-- [License](#-license)
+
 
 ---
 
@@ -486,21 +485,6 @@ npm run lint:fix
 # Format code
 npm run format
 ```
-
-
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-
-
-
-
 
 
 
