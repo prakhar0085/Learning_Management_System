@@ -1,74 +1,648 @@
-# Learning_Management_System
-LMS SAAS
-B2b
+# 🎓 Learning Management System (LMS) 
 
-elastic ip - 51.20.148.95 for ec2
+> A modern, full-stack Learning Management System that empowers educators to create and sell courses while providing students with an intuitive learning experience powered by AI-enhanced search.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
+[![React Version](https://img.shields.io/badge/react-19.1.0-blue)](https://reactjs.org/)
 
-Component Details
-1. CI/CD Pipeline (GitHub Actions)
-Trigger: Pushes to main or dev branches.
-Jobs:
-Build & Lint: Installs dependencies for both client and server, runs linting checks, and verifies Docker builds.
-Deploy: Connects to the AWS EC2 instance via SSH, pulls the latest code from GitHub, and redeploys using docker compose up -d --build.
-2. Frontend Services (client)
-Technology: React, Redux Toolkit, TailwindCSS, Vite.
-Deployment: running within a Docker container using a Node.js Alpine image.
-Serving: Uses npm run preview to serve the production build on port 5173.
-Configuration: Environment variables (e.g., VITE_API_URL, Firebase keys) are passed as build arguments during the Docker build process.
-3. Backend Services (server)
-Technology: Node.js, Express.js.
-Deployment: Running within a Docker container using a Node.js Alpine image.
-Serving: Runs on port 8000.
-Key Dependencies: mongoose (DB), jsonwebtoken (Auth), cloudinary (File Uploads), razorpay (Payments), @google/genai (AI).
-4. Data & External Integration
-Database: MongoDB Atlas (Cloud-hosted NoSQL).
-Media: Cloudinary for storing course thumbnails and user avatars.
-AI: Google Gemini for content generation features.
-Payments: Razorpay for course purchasing.
-Additional: Firebase (SDK included in client for auth/notifications).
-Network Flow
-Deployment: GitHub Actions SSHs into the EC2 instance -> Pulls code -> Rebuilds Containers.
-User Access: The user visits the EC2 public IP on port 5173.
-API communication: The React app (running in the user's browser) makes HTTP requests directly to the EC2 public IP on port 8000.
+---
 
+## 📋 Table of Contents
 
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Architecture](#-architecture)
+- [Getting Started](#-getting-started)
+- [Environment Variables](#-environment-variables)
+- [Project Structure](#-project-structure)
+- [API Documentation](#-api-documentation)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+- [License](#-license)
 
+---
 
+## ✨ Features
 
-SkillsSprint Project Analysis & Resume Enhancement
-After analyzing your codebase, I found that your project is technically richer than your current description suggests. Specifically, the integration of Google Gemini AI for semantic search and Cloudinary for media management are major "stand-out" features that usually impress recruiters.
+### For Students
+- 🔍 **AI-Powered Search** - Find courses using natural language queries powered by Google Gemini AI
+- 📚 **Course Enrollment** - Browse and enroll in courses across multiple categories and difficulty levels
+- 🎥 **Video Learning** - Stream course lectures with a custom video player
+- ⭐ **Review System** - Rate and review courses to help other students make informed decisions
+- 👤 **Personal Dashboard** - Track enrolled courses, progress, and manage your profile
+- 🔐 **Secure Authentication** - JWT-based auth with Google OAuth integration
+- 💳 **Seamless Payments** - Multiple payment options via Razorpay (UPI, Cards, Wallets)
 
-🚀 Improved Resume Description
-SkillsSprint | Full-Stack LMS Platform
-Tech Stack: React.js, Node.js, Express.js, MongoDB, Google Gemini AI, Razorpay, Cloudinary, Docker, AWS (EC2), GitHub Actions.
+### For Educators
+- 📝 **Course Creation** - Build comprehensive courses with multiple lectures and rich content
+- 💰 **Monetization** - Set prices and sell courses through integrated payment processing
+- 📊 **Course Management** - Full CRUD operations for courses and lectures
+- 🖼️ **Media Upload** - Upload thumbnails and videos with Cloudinary integration
+- 📈 **Student Analytics** - Track enrollments and course performance metrics
+- ✏️ **Content Editor** - Markdown support for course descriptions and lecture content
 
-Intelligent Course Discovery: Engineered a semantic search engine using Google Gemini AI, enabling intent-based course discovery and improving user experience by 40% through context-aware result mapping beyond literal keywords.
-Scalable MVC Architecture: Architected a robust backend using the Model-View-Controller (MVC) pattern, optimizing code modularity and facilitating complex multi-role workflows (Learner, Educator) with clean separation of concerns.
-Advanced Identity Management: Implemented JWT-secured authentication with httpOnly cookies and Google OAuth, reducing unauthorized access attempts by 60% and ensuring secure, CSRF-resistant session persistence.
-Global Monetization Engine: Integrated Razorpay API for multi-currency transactions (UPI, Cards, Wallets), streamlining enrollment and achieving an 18% reduction in payment abandonment through optimized checkout logic.
-High-Performance Media Delivery: Leveraged Cloudinary for dynamic media management, ensuring lightning-fast assets delivery via automated image optimization and CDN distribution, reducing page load times by 25%.
-Automated DevOps & CI/CD: Containerized the application with Docker and built a GitHub Actions production pipeline for automated linting, testing, and zero-downtime deployment on AWS EC2.
-💡 Why this stands out?
-AI Integration: Many developers build LMS platforms, but very few integrate LLMs (Gemini) directly into the core search logic. This shows you are at the forefront of modern tech.
-Professional Security: Mentioning httpOnly and CSRF-resistant shows you understand production-grade security, not just "basic login."
-Performance Focus: Cloudinary integration proves you care about asset optimization and scalability, which is critical for media-heavy apps like LMS.
-DevOps Proficiency: Using GitHub Actions for more than just "pushing code" (linting, building Docker images) shows true CI/CD maturity.
-🎤 Interview Tips for this Project
-Q: Why did you use Gemini for search?
-A: "Traditional regex search fails when a user types 'I want to build apps' but the course is titled 'React Development.' I used Gemini to map user intent to keywords, significantly improving search success rates."
-Q: How does your CI/CD pipeline handle failures?
-A: "The pipeline includes a linting and build stage. If those fail, the deployment to EC2 is automatically aborted, preventing broken code from reaching production."
-Q: Why store tokens in cookies instead of LocalStorage?
-A: "LocalStorage is vulnerable to XSS attacks. By using httpOnly cookies, I ensured the token is inaccessible to client-side scripts, providing a much higher security standard."
+### Technical Highlights
+- ⚡ Fast and responsive UI with **React 19** and **Vite**
+- 🎨 Beautiful design with **Tailwind CSS**
+- 🔄 Real-time state management with **Redux Toolkit**
+- 💳 Secure payments via **Razorpay**
+- ☁️ Cloud storage with **Cloudinary**
+- 🤖 AI-enhanced search capabilities with **Google Gemini**
+- 🐳 **Dockerized** for easy deployment
+- 🚀 **CI/CD** pipeline with GitHub Actions
+- ☁️ Deployed on **AWS EC2**
 
+---
 
-SkillsSprint | Full-Stack LMS Platform
-Tech Stack: React.js, Node.js, Express.js, MongoDB, Google Gemini AI, Razorpay, Docker, AWS (EC2), GitHub Actions.
+## 🏗️ Tech Stack
 
-Intelligent Course Discovery: Engineered a semantic search engine powered by Google Gemini AI, enabling intent-based course discovery and improving search relevance by providing context-aware results beyond literal keyword matching.
-Scalable MVC Architecture: Architected a robust backend using the Model-View-Controller (MVC) pattern, optimizing code maintainability and facilitating the seamless integration of multi-role workflows (Learner, Educator).
-Security & Identity Management: Implemented JWT-secured authentication with httpOnly cookies and Google OAuth, reducing unauthorized access attempts by 60% and ensuring secure, CSRF-resistant session management.
-Global Monetization Engine: Integrated Razorpay API for multi-currency transactions (UPI, Cards, Wallets), streamlining the enrollment process and achieving an 18% reduction in payment abandonment through optimized checkout flows.
-Dynamic Content Delivery: Leveraged Cloudinary for cloud-based media management, ensuring lightning-fast delivery of educational assets through optimized image transformations and automated CDN distribution.
-Automated DevOps Pipeline: Containerized the entire stack using Docker and orchestrated a CI/CD pipeline via GitHub Actions for automated testing and zero-downtime deployment on AWS EC2, reducing deployment lead time by X% (optional).
+### Backend
+- **Runtime:** Node.js (v16+)
+- **Framework:** Express.js 5.1.0
+- **Database:** MongoDB with Mongoose ODM
+- **Authentication:** JWT + bcryptjs + Google OAuth
+- **Payment Gateway:** Razorpay
+- **AI Integration:** Google Generative AI (Gemini)
+- **Cloud Storage:** Cloudinary
+- **Email Service:** Nodemailer
+- **Security:** express-rate-limit, cookie-parser, CORS
+- **File Upload:** Multer
+
+### Frontend
+- **Framework:** React 19.1.0
+- **Build Tool:** Vite 6.3.5
+- **State Management:** Redux Toolkit
+- **Routing:** React Router DOM 7.6.2
+- **Styling:** Tailwind CSS 4.1.10
+- **HTTP Client:** Axios
+- **Auth:** Firebase
+- **UI Components:** React Icons, React Spinners, React Toastify
+- **Data Visualization:** Recharts
+- **Markdown Rendering:** React Markdown with remark-gfm
+
+### DevOps & Infrastructure
+- **Containerization:** Docker
+- **CI/CD:** GitHub Actions
+- **Hosting:** AWS EC2
+- **Version Control:** Git & GitHub
+
+---
+
+## 🏛️ Architecture
+
+### System Architecture
+
+```
+┌─────────────────┐
+│   GitHub Repo   │
+└────────┬────────┘
+         │
+         │ (Git Push)
+         ▼
+┌─────────────────┐
+│ GitHub Actions  │ ◄─── CI/CD Pipeline
+│   - Build       │      • Lint & Test
+│   - Test        │      • Docker Build
+│   - Deploy      │      • SSH Deploy
+└────────┬────────┘
+         │
+         │ (SSH)
+         ▼
+┌─────────────────────────────────────────┐
+│         AWS EC2 Instance                │
+│  ┌───────────────────────────────────┐  │
+│  │      Docker Compose Network       │  │
+│  │                                   │  │
+│  │  ┌─────────────┐  ┌────────────┐ │  │
+│  │  │   Client    │  │   Server   │ │  │
+│  │  │  (React)    │──│ (Node.js)  │ │  │
+│  │  │  Port 5173  │  │ Port 8000  │ │  │
+│  │  └─────────────┘  └─────┬──────┘ │  │
+│  └─────────────────────────┼────────┘  │
+└────────────────────────────┼───────────┘
+                             │
+          ┌──────────────────┼──────────────────┐
+          │                  │                  │
+          ▼                  ▼                  ▼
+  ┌───────────────┐  ┌──────────────┐  ┌──────────────┐
+  │  MongoDB      │  │  Cloudinary  │  │   Razorpay   │
+  │  Atlas        │  │  (Media CDN) │  │  (Payments)  │
+  └───────────────┘  └──────────────┘  └──────────────┘
+          ▲
+          │
+          ▼
+  ┌───────────────┐
+  │ Google Gemini │
+  │  (AI Search)  │
+  └───────────────┘
+```
+
+### MVC Architecture (Backend)
+
+```
+server/
+├── models/          # Database schemas (User, Course, Lecture, Order, Review)
+├── controllers/     # Business logic & request handlers
+├── routes/          # API endpoints & routing
+├── middlewares/     # Auth, validation, error handling
+├── configs/         # Database, Cloudinary, Razorpay, Email configs
+└── services/        # External API integrations
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v16 or higher) - [Download](https://nodejs.org/)
+- **MongoDB** (local or Atlas account) - [Get Started](https://www.mongodb.com/cloud/atlas)
+- **npm** or **yarn** package manager
+- **Docker** (optional, for containerized deployment) - [Download](https://www.docker.com/)
+
+### Installation
+
+#### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/prakhar0085/Learning_Management_System.git
+cd Learning_Management_System
+```
+
+#### 2️⃣ Install Backend Dependencies
+
+```bash
+cd server
+npm install
+```
+
+#### 3️⃣ Install Frontend Dependencies
+
+```bash
+cd ../client
+npm install
+```
+
+#### 4️⃣ Configure Environment Variables
+
+Create `.env` files in both `client` and `server` directories. See [Environment Variables](#-environment-variables) section for details.
+
+#### 5️⃣ Start the Application
+
+**Option A: Run Locally**
+
+```bash
+# Terminal 1 - Start Backend Server
+cd server
+npm run dev
+# Server runs on http://localhost:8000
+
+# Terminal 2 - Start Frontend Development Server
+cd client
+npm run dev
+# Client runs on http://localhost:5173
+```
+
+**Option B: Run with Docker**
+
+```bash
+# From project root directory
+docker-compose up --build
+
+# Access the application
+# Frontend: http://localhost:5173
+# Backend: http://localhost:8000
+```
+
+#### 6️⃣ Access the Application
+
+Open your browser and navigate to:
+```
+http://localhost:5173
+```
+
+---
+
+## 🔐 Environment Variables
+
+### Backend (.env in `server/` directory)
+
+```env
+# Server Configuration
+PORT=8000
+
+# Database
+MONGODB_URL=your_mongodb_connection_string
+
+# JWT Authentication
+JWT_SECRET=your_jwt_secret_key
+
+# Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+# Email Configuration (Nodemailer)
+EMAIL=your_email@gmail.com
+EMAIL_PASS=your_app_specific_password
+
+# Razorpay Payment Gateway
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_SECRET=your_razorpay_secret
+
+# Google Gemini AI
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+### Frontend (.env in `client/` directory)
+
+```env
+# API Configuration
+VITE_API_URL=http://localhost:8000/api
+
+# Firebase Configuration
+VITE_FIREBASE_APIKEY=your_firebase_api_key
+VITE_FIREBASE_AUTHDOMAIN=your_firebase_auth_domain
+VITE_FIREBASE_PROJECTID=your_firebase_project_id
+VITE_FIREBASE_STORAGEBUCKET=your_firebase_storage_bucket
+VITE_FIREBASE_MESSAGINGSENDERID=your_firebase_messaging_sender_id
+VITE_FIREBASE_APPID=your_firebase_app_id
+
+# Razorpay (Frontend)
+VITE_RAZORPAY_KEY_ID=your_razorpay_key_id
+```
+
+### 🔑 How to Get API Keys
+
+- **MongoDB**: [Create free cluster on MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+- **Cloudinary**: [Sign up for free account](https://cloudinary.com/)
+- **Razorpay**: [Get test/live keys](https://razorpay.com/)
+- **Google Gemini AI**: [Get API key from Google AI Studio](https://ai.google.dev/)
+- **Firebase**: [Create project in Firebase Console](https://console.firebase.google.com/)
+
+---
+
+## 📁 Project Structure
+
+```
+Learning_Management_System/
+├── .github/
+│   └── workflows/
+│       └── ci.yml                 # GitHub Actions CI/CD pipeline
+├── client/                        # Frontend React application
+│   ├── public/
+│   ├── src/
+│   │   ├── components/           # Reusable UI components
+│   │   ├── customHooks/          # Custom React hooks
+│   │   ├── pages/                # Page components
+│   │   │   ├── admin/           # Admin-specific pages
+│   │   │   ├── EditProfile.jsx
+│   │   │   ├── ForgotPassword.jsx
+│   │   │   └── ViewCourse.jsx
+│   │   ├── redux/               # Redux store & slices
+│   │   ├── App.jsx              # Main app component
+│   │   └── main.jsx             # Entry point
+│   ├── .dockerignore
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── vite.config.js
+├── server/                        # Backend Node.js application
+│   ├── configs/                  # Configuration files
+│   │   ├── cloudinary.js
+│   │   ├── db.js
+│   │   ├── email.js
+│   │   └── razorpay.js
+│   ├── controllers/              # Route controllers
+│   │   ├── authController.js
+│   │   ├── courseController.js
+│   │   ├── lectureController.js
+│   │   ├── orderController.js
+│   │   ├── reviewController.js
+│   │   └── userController.js
+│   ├── middlewares/              # Custom middleware
+│   │   ├── auth.middleware.js
+│   │   ├── errorHandler.js
+│   │   └── rateLimiter.js
+│   ├── models/                   # Mongoose models
+│   │   ├── userModel.js
+│   │   ├── courseModel.js
+│   │   ├── lectureModel.js
+│   │   ├── orderModel.js
+│   │   └── reviewModel.js
+│   ├── routes/                   # API routes
+│   │   ├── authRoutes.js
+│   │   ├── courseRoutes.js
+│   │   ├── lectureRoutes.js
+│   │   ├── orderRoutes.js
+│   │   ├── reviewRoutes.js
+│   │   └── userRoutes.js
+│   ├── services/                 # Business logic & external services
+│   ├── .dockerignore
+│   ├── Dockerfile
+│   ├── index.js                  # Entry point
+│   └── package.json
+├── docker-compose.yml             # Docker orchestration
+├── .gitignore
+└── README.md
+```
+
+---
+
+## 📡 API Documentation
+
+### Base URL
+```
+http://localhost:8000/api
+```
+
+### Authentication Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/auth/register` | Register new user | ❌ |
+| POST | `/auth/login` | Login user | ❌ |
+| POST | `/auth/logout` | Logout user | ✅ |
+| GET | `/auth/profile` | Get user profile | ✅ |
+| POST | `/auth/forgot-password` | Request password reset | ❌ |
+| POST | `/auth/reset-password` | Reset password | ❌ |
+
+### Course Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/courses` | Get all courses | ❌ |
+| GET | `/courses/:id` | Get course by ID | ❌ |
+| POST | `/courses` | Create new course | ✅ (Admin) |
+| PUT | `/courses/:id` | Update course | ✅ (Admin) |
+| DELETE | `/courses/:id` | Delete course | ✅ (Admin) |
+| GET | `/courses/search` | AI-powered search | ❌ |
+
+### Lecture Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/lectures/:courseId` | Get lectures for course | ✅ |
+| POST | `/lectures` | Create new lecture | ✅ (Admin) |
+| PUT | `/lectures/:id` | Update lecture | ✅ (Admin) |
+| DELETE | `/lectures/:id` | Delete lecture | ✅ (Admin) |
+
+### Order/Payment Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/orders/create` | Create Razorpay order | ✅ |
+| POST | `/orders/verify` | Verify payment | ✅ |
+| GET | `/orders/history` | Get user's order history | ✅ |
+
+### Review Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/reviews/:courseId` | Get course reviews | ❌ |
+| POST | `/reviews` | Create review | ✅ |
+| PUT | `/reviews/:id` | Update review | ✅ |
+| DELETE | `/reviews/:id` | Delete review | ✅ |
+
+---
+
+## 🚢 Deployment
+
+### CI/CD Pipeline (GitHub Actions)
+
+The project includes an automated CI/CD pipeline that:
+
+1. **Triggers on**: Push to `main` or `dev` branches
+2. **Build & Lint**: 
+   - Installs dependencies for client and server
+   - Runs ESLint checks
+   - Verifies Docker builds
+3. **Deploy**:
+   - Connects to AWS EC2 via SSH
+   - Pulls latest code from GitHub
+   - Redeploys using `docker-compose up -d --build`
+
+### Manual Deployment to AWS EC2
+
+#### Prerequisites
+- AWS EC2 instance with Docker installed
+- Security groups configured to allow ports 5173 and 8000
+- SSH access to the instance
+
+#### Steps
+
+1. **SSH into your EC2 instance**
+   ```bash
+   ssh -i your-key.pem ubuntu@your-ec2-public-ip
+   ```
+
+2. **Clone the repository**
+   ```bash
+   git clone https://github.com/prakhar0085/Learning_Management_System.git
+   cd Learning_Management_System
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   # Create .env files in client/ and server/ directories
+   nano server/.env
+   nano client/.env
+   ```
+
+4. **Build and run with Docker**
+   ```bash
+   docker-compose up -d --build
+   ```
+
+5. **Access the application**
+   ```
+   http://your-ec2-public-ip:5173
+   ```
+
+### Environment-Specific Configuration
+
+For production deployment, update the following:
+
+**Client `.env`:**
+```env
+VITE_API_URL=http://your-ec2-public-ip:8000/api
+```
+
+**Server `.env`:**
+- Use production MongoDB URI
+- Use production Razorpay and Cloudinary credentials
+- Set strong JWT_SECRET
+
+---
+
+## 🎯 Key Features Explained
+
+### 1. AI-Powered Search with Google Gemini
+
+The platform uses Google Gemini AI to enable semantic search, allowing users to find courses using natural language queries:
+
+```javascript
+// Example: User searches "I want to build mobile apps"
+// AI maps intent to relevant courses like:
+// - "React Native Development"
+// - "Flutter for Beginners"
+// - "iOS Development with Swift"
+```
+
+**Why it matters:** Traditional keyword search fails when course titles don't match exact search terms. AI search understands intent and context.
+
+### 2. Secure Authentication Flow
+
+- **JWT Tokens** stored in httpOnly cookies (XSS protection)
+- **Google OAuth** integration for social login
+- **Password Reset** via email with time-limited tokens
+- **Rate Limiting** to prevent brute-force attacks
+
+### 3. Razorpay Payment Integration
+
+Supports multiple payment methods:
+- UPI (Google Pay, PhonePe, Paytm)
+- Credit/Debit Cards
+- Net Banking
+- Digital Wallets
+
+### 4. Cloudinary Media Management
+
+- Automatic image optimization
+- CDN delivery for fast loading
+- Video streaming support
+- Responsive image transformations
+
+---
+
+## 🧪 Testing
+
+### Run Tests Locally
+
+```bash
+# Backend linting
+cd server
+npm run lint
+
+# Frontend linting
+cd client
+npm run lint
+
+# Fix linting issues
+npm run lint:fix
+
+# Format code
+npm run format
+```
+
+---
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+#### 1. MongoDB Connection Error
+```
+Error: MongoNetworkError: failed to connect to server
+```
+**Solution:** Check your `MONGODB_URL` in `.env` file and ensure MongoDB service is running.
+
+#### 2. Cloudinary Upload Failed
+```
+Error: Invalid API credentials
+```
+**Solution:** Verify `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`.
+
+#### 3. Razorpay Payment Not Working
+```
+Error: API key is invalid
+```
+**Solution:** Ensure you're using the correct Razorpay key for your environment (test/live).
+
+#### 4. CORS Issues
+```
+Error: CORS policy blocked
+```
+**Solution:** Check CORS configuration in `server/index.js` and ensure frontend URL is whitelisted.
+
+#### 5. Docker Build Fails
+```
+Error: Cannot find module
+```
+**Solution:** Run `docker-compose down` and rebuild with `docker-compose up --build`.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. **Fork the repository**
+2. **Create a feature branch**
+   ```bash
+   git checkout -b feature/AmazingFeature
+   ```
+3. **Commit your changes**
+   ```bash
+   git commit -m 'Add some AmazingFeature'
+   ```
+4. **Push to the branch**
+   ```bash
+   git push origin feature/AmazingFeature
+   ```
+5. **Open a Pull Request**
+
+### Code Style Guidelines
+
+- Follow ESLint configuration
+- Use Prettier for code formatting
+- Write meaningful commit messages
+- Add comments for complex logic
+- Update documentation for new features
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Prakhar Tiwari**
+- GitHub: [@prakhar0085](https://github.com/prakhar0085)
+- Project Repository: [Learning_Management_System](https://github.com/prakhar0085/Learning_Management_System)
+
+---
+
+## 🙏 Acknowledgments
+
+- [React](https://reactjs.org/) - Frontend framework
+- [Node.js](https://nodejs.org/) - Backend runtime
+- [MongoDB](https://www.mongodb.com/) - Database
+- [Cloudinary](https://cloudinary.com/) - Media management
+- [Razorpay](https://razorpay.com/) - Payment gateway
+- [Google Gemini AI](https://ai.google.dev/) - AI search capabilities
+- [Tailwind CSS](https://tailwindcss.com/) - Styling framework
+
+---
+
+## 📞 Support
+
+If you have any questions or need help with setup, please:
+- Open an [Issue](https://github.com/prakhar0085/Learning_Management_System/issues)
+- Contact via email: [Your Email]
+
+---
+
+<div align="center">
+
+### ⭐ Star this repository if you find it helpful!
+
+Made with ❤️ by [Prakhar Tiwari](https://github.com/prakhar0085)
+
+</div>
