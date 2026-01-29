@@ -1,4 +1,4 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from 'dotenv';
 import Course from '../models/courseModel.js';
 dotenv.config();
@@ -10,8 +10,17 @@ export const searchWithAi = async (req, res) => {
     if (!input) {
       return res.status(400).json({ message: 'Search query is required' });
     }
-    // case-insensitive
-    const ai = new GoogleGenAI({});
+    
+    
+    const apiKey = process.env.GEMINI_API_KEY;
+    
+    if (!apiKey) {
+        return res.status(500).json({ message: "Server configuration error: API Key missing" });
+    }
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
+
     const prompt = `You are an intelligent assistant for an LMS platform. A user will type any query about what they want to learn. Your task is to understand the intent and return one **most relevant keyword** from the following list of course categories and levels:
 
 - App Development  
@@ -32,11 +41,9 @@ Only reply with one single keyword from the list above that best matches the que
 Query: ${input}
 `;
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-    });
-    const keyword = response.text;
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const keyword = response.text().trim(); // Ensure we get clean text
 
     const courses = await Course.find({
       isPublished: true,
@@ -65,6 +72,8 @@ Query: ${input}
       return res.status(200).json(courses);
     }
   } catch (error) {
-    console.log(error);
+    console.error("AI Search Error:", error.message); 
+    // Return a proper error response so the client doesn't hang
+    return res.status(500).json({ message: "AI Service unavailable. Please check API Key or try again later." });
   }
 };

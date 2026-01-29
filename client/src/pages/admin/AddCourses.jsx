@@ -132,103 +132,148 @@ const editCourseHandler = async () => {
 
     
   return (
-     <div className="max-w-5xl mx-auto p-6 mt-10 bg-white rounded-lg shadow-md">
+     <div className="min-h-screen bg-[#09090b] text-white px-4 py-10 pb-20">
+      <div className="max-w-6xl mx-auto">
         
       {/* Top Bar */}
-      <div className="flex items-center justify-center gap-[20px] md:justify-between flex-col md:flex-row  mb-6 relative">
-        <FaArrowLeftLong  className='top-[-20%] md:top-[20%] absolute left-[0] md:left-[2%] w-[22px] h-[22px] cursor-pointer' onClick={()=>navigate("/courses")}/>
-        <h2 className="text-2xl font-semibold md:pl-[60px]">Add detail information regarding course</h2>
-        <div className="space-x-2 space-y-2 ">
-          <button className="bg-black text-white px-4 py-2 rounded-md" onClick={()=>navigate(`/createlecture/${selectedCourse?._id}`)}>Go to lectures page</button>
-          
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4 border-b border-gray-800 pb-6">
+        <div className="flex items-center gap-4 w-full md:w-auto">
+             <button className="p-2 rounded-lg hover:bg-gray-800 transition-colors text-gray-400 hover:text-white" onClick={()=>navigate("/courses")}>
+                 <FaArrowLeftLong className='w-5 h-5'/>
+             </button>
+             <div>
+                <h2 className="text-xl font-semibold text-white tracking-tight">Edit Course</h2>
+                <p className="text-sm text-gray-500">Update your course details and content.</p>
+             </div>
+        </div>
+        
+        <div className="flex items-center gap-3">
+            <button 
+                className="flex items-center gap-2 bg-[#18181b] hover:bg-gray-800 text-gray-300 px-4 py-2 rounded-lg border border-gray-800 transition-all text-sm font-medium" 
+                onClick={()=>navigate(`/createlecture/${selectedCourse?._id}`)}
+            >
+                <span>Manage Lectures</span>
+                <span className="text-gray-500 text-xs ml-1">→</span>
+            </button>
+            <div className="h-6 w-px bg-gray-800 mx-1"></div>
+            <button 
+                className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all ${!isPublished ? "bg-green-500/10 text-green-500 border-green-500/20 hover:bg-green-500/20" : "bg-yellow-500/10 text-yellow-500 border-yellow-500/20 hover:bg-yellow-500/20"}`} 
+                onClick={()=>setIsPublished(prev=>!prev)}
+            >
+                {isPublished ? "Back to Draft" : "Publish Course"}
+            </button>
+            <button 
+                className="px-4 py-2 rounded-lg text-sm font-medium text-red-500 hover:bg-red-500/10 transition-all" 
+                disabled={loading} onClick={removeCourse}
+            >
+                {loading ? <ClipLoader size={14} color='#ef4444'/> :"Delete"}
+            </button>
         </div>
       </div>
 
-      {/* Form Box */}
-      <div className="bg-gray-50 p-6 rounded-md">
-        <h3 className="text-lg font-medium mb-4">Basic Course Information</h3>
-        <div className="space-x-2 space-y-2 ">
-          {!isPublished? <button className="bg-green-100 text-green-600 px-4 py-2 rounded-md border-1" onClick={()=>setIsPublished(prev=>!prev)}>Click to Publish</button> 
-          :<button className="bg-red-100 text-red-600 px-4 py-2 rounded-md border-1" onClick={()=>setIsPublished(prev=>!prev)}>Click to UnPublish</button>
-          }
-          <button className="bg-red-600 text-white px-4 py-2 rounded-md" disabled={loading} onClick={removeCourse}>{loading?<ClipLoader size={30} color='white'/> :"Remove Course"}</button>
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Main Info */}
+          <div className="lg:col-span-2 space-y-6">
+              <div className="bg-[#121214] border border-gray-800 rounded-xl p-6 shadow-sm">
+                  <h3 className="text-base font-medium text-white mb-6 flex items-center gap-2">
+                      <span className="w-1 h-4 bg-purple-500 rounded-full"></span>
+                      Basic Details
+                  </h3>
+                  
+                  <div className="space-y-5">
+                    {/* Title */}
+                    <div>
+                        <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wide">Course Title</label>
+                        <input type="text" placeholder="e.g. Advanced System Design" className="w-full bg-[#18181b] border border-gray-800 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:border-gray-600 focus:outline-none focus:ring-0 transition-colors text-sm" onChange={(e)=>setTitle(e.target.value)} value={title}/>
+                    </div>
 
-        <form className="space-y-6" onSubmit={(e)=>e.preventDefault()}>
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-            <input type="text" placeholder="Course Title" className="w-full border px-4 py-2 rounded-md" onChange={(e)=>setTitle(e.target.value)} value={title}/>
+                    {/* Subtitle */}
+                    <div>
+                        <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wide">Subtitle</label>
+                        <input type="text" placeholder="A short, catchy description for cards." className="w-full bg-[#18181b] border border-gray-800 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:border-gray-600 focus:outline-none focus:ring-0 transition-colors text-sm" onChange={(e)=>setSubTitle(e.target.value)} value={subTitle} />
+                    </div>
+
+                    {/* Description */}
+                    <div>
+                        <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wide">Description</label>
+                        <textarea placeholder="Detailed course description..." className="w-full bg-[#18181b] border border-gray-800 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:border-gray-600 focus:outline-none resize-y min-h-[200px] text-sm leading-relaxed" onChange={(e)=>setDescription(e.target.value)} value={description}></textarea>
+                    </div>
+                  </div>
+              </div>
           </div>
 
-          {/* Subtitle */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Subtitle</label>
-            <input type="text" placeholder="Subtitle" className="w-full border px-4 py-2 rounded-md" onChange={(e)=>setSubTitle(e.target.value)} value={subTitle} />
+          {/* Right Column - Metadata & Media */}
+          <div className="space-y-6">
+             {/* Thumbnail Card */}
+             <div className="bg-[#121214] border border-gray-800 rounded-xl p-6 shadow-sm">
+                 <h3 className="text-sm font-medium text-white mb-4">Thumbnail</h3>
+                 <input type="file" ref={thumb} hidden onChange={handleThumbnail} accept='image/*' />
+                 <div className='relative w-full aspect-video rounded-lg overflow-hidden border border-dashed border-gray-700 hover:border-white transition-colors cursor-pointer bg-[#18181b] group' onClick={()=>thumb.current.click()}>
+                    <img src={frontendImage} alt="Thumbnail" className='w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity' />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                         <div className="p-2 bg-black/50 backdrop-blur-sm rounded-full mb-2">
+                             <MdEdit className='w-4 h-4 text-white'/>
+                         </div>
+                         <span className="text-xs text-white/80 font-medium">Click to upload</span>
+                    </div>
+                </div>
+             </div>
+
+             {/* Organization Card */}
+             <div className="bg-[#121214] border border-gray-800 rounded-xl p-6 shadow-sm">
+                 <h3 className="text-sm font-medium text-white mb-4">Course Settings</h3>
+                 <div className="space-y-4">
+                      {/* Category */}
+                     <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">Category</label>
+                        <select className="w-full bg-[#18181b] border border-gray-800 rounded-lg px-3 py-2.5 text-white focus:border-gray-600 focus:outline-none cursor-pointer text-sm" onChange={(e)=>setCategory(e.target.value)} value={category}>
+                            <option value="" className="bg-[#18181b]">Select Category</option>
+                            <option value="App Development" className="bg-[#18181b]">App Development</option>
+                            <option value="AI/ML" className="bg-[#18181b]">AI/ML</option>
+                            <option value="AI Tools" className="bg-[#18181b]">AI Tools</option>
+                            <option value="Data Science" className="bg-[#18181b]">Data Science</option>
+                            <option value="Data Analytics" className="bg-[#18181b]">Data Analytics</option>
+                            <option value="Ethical Hacking" className="bg-[#18181b]">Ethical Hacking</option>
+                            <option value="UI UX Designing" className="bg-[#18181b]">UI UX Designing</option>
+                            <option value="Web Development" className="bg-[#18181b]">Web Development</option>
+                            <option value="Others" className="bg-[#18181b]">Others</option>
+                        </select>
+                     </div>
+
+                     {/* Level */}
+                     <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1.5">Level</label>
+                        <select className="w-full bg-[#18181b] border border-gray-800 rounded-lg px-3 py-2.5 text-white focus:border-gray-600 focus:outline-none cursor-pointer text-sm" onChange={(e)=>setLevel(e.target.value)} value={level} >
+                            <option value="" className="bg-[#18181b]">Select Level</option>
+                            <option value="Beginner" className="bg-[#18181b]">Beginner</option>
+                            <option value="Intermediate" className="bg-[#18181b]">Intermediate</option>
+                            <option value="Advanced" className="bg-[#18181b]">Advanced</option>
+                        </select>
+                     </div>
+
+                      {/* Price */}
+                      <div>
+                         <label className="block text-xs font-medium text-gray-500 mb-1.5">Price (INR)</label>
+                         <div className="relative">
+                            <span className="absolute left-3 top-2.5 text-gray-500 text-sm">₹</span>
+                            <input type="number" placeholder="0" className="w-full bg-[#18181b] border border-gray-800 rounded-lg pl-8 pr-3 py-2.5 text-white focus:border-gray-600 focus:outline-none transition-colors text-sm font-mono" onChange={(e)=>setPrice(e.target.value)} value={price} />
+                         </div>
+                      </div>
+                 </div>
+             </div>
+
+              {/* Action Buttons (Mobile/Desktop overlap specific) */}
+              <div className="flex flex-col gap-3 pt-2">
+                <button className='w-full py-3 rounded-lg bg-white text-black font-semibold text-sm hover:bg-gray-200 transition-colors shadow-lg' disabled={loading} onClick={editCourseHandler}>
+                    {loading ? <ClipLoader size={18} color='black'/> : "Save Changes"}
+                </button>
+                <button className='w-full py-3 rounded-lg border border-gray-800 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors text-sm font-medium' onClick={()=>navigate("/courses")}>
+                    Discard
+                </button>
+              </div>
           </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea placeholder="Course description" className="w-full border px-4 py-2 rounded-md h-24 resize-none" onChange={(e)=>setDescription(e.target.value)} value={description}></textarea>
-          </div>
-
-          {/* Category, Level, Price - Flex row */}
-          <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-            {/* Category */}
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-              <select className="w-full border px-4 py-2 rounded-md bg-white" onChange={(e)=>setCategory(e.target.value)} value={category}>
-                <option value="">Select Category</option>
-                 <option value="App Development">App Development</option>
-                             <option value="AI/ML">AI/ML</option>
-                            <option value="AI Tools">AI Tools
-                            </option>
-                             <option value="Data Science">Data Science</option>
-                            <option value="Data Analytics">Data Analytics</option>
-                            <option value="Ethical Hacking">Ethical Hacking</option>
-                            <option value="UI UX Designing">UI UX Designing</option>
-                            <option value="Web Development">Web Development</option>
-                            <option value="Others">Others</option>
-              </select>
-            </div>
-
-            {/* Level */}
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Course Level</label>
-              <select className="w-full border px-4 py-2 rounded-md bg-white" onChange={(e)=>setLevel(e.target.value)} value={level} >
-                <option value="">Select Level</option>
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-              </select>
-            </div>
-
-            {/* Price */}
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Price (INR)</label>
-              <input type="number" placeholder="₹" className="w-full border px-4 py-2 rounded-md" onChange={(e)=>setPrice(e.target.value)} value={price} />
-            </div>
-          </div>
-
-          {/* Thumbnail */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Course Thumbnail</label>
-            <input type="file" ref={thumb} hidden className="w-full border px-4 py-2 rounded-md" onChange={handleThumbnail} accept='image/*' />
-          </div>
-
-          <div  className='relative w-[300px]
-          h-[170px]'><img src={frontendImage} alt="" className='w-[100%]
-          h-[100%] border-1 border-black rounded-[5px]' onClick={()=>thumb.current.click()} />
-          <MdEdit className='w-[20px] h-[20px] absolute top-2 right-2  ' onClick={()=>thumb.current.click()}/> </div>
-
-          <div className='flex items-center justify-start gap-[15px]'>
-            <button className='bg-[#e9e8e8] hover:bg-red-200 text-black border-1 border-black cursor-pointer px-4 py-2 rounded-md' onClick={()=>navigate("/courses")}>Cancel</button>
-            <button className='bg-black text-white px-7 py-2 rounded-md hover:bg-gray-500 cursor-pointer' disabled={loading} onClick={editCourseHandler}>{loading ? <ClipLoader size={30} color='white'/>:"Save"}</button>
-            
-          </div>
-        </form>
       </div>
+     </div>
     </div>
   )
 }

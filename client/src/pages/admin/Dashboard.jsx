@@ -28,57 +28,96 @@ function Dashboard() {
   }, 0) || 0;
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <FaArrowLeftLong className=' w-[22px] absolute top-[10%]
-      left-[10%] h-[22px] cursor-pointer' onClick={() => navigate("/")} />
-      <div className="w-full px-6 py-10   bg-gray-50 space-y-10">
-        {/* Welcome Section */}
-        <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-md p-6 flex flex-col md:flex-row items-center gap-6">
+    <div className="flex min-h-screen bg-[#09090b] text-white px-6 py-10">
+      
+      <div className="w-full max-w-7xl mx-auto space-y-8">
+        
+        {/* Header with Back Button */}
+        <div className="flex items-center justify-between border-b border-gray-800 pb-6">
+             <div className="flex items-center gap-4">
+                <button onClick={() => navigate("/")} className="p-2 rounded-lg hover:bg-gray-800 transition-colors text-gray-400 hover:text-white">
+                        <FaArrowLeftLong className='w-5 h-5'/>
+                </button>
+                <h1 className="text-2xl font-semibold text-white tracking-tight">Instructor Dashboard</h1>
+             </div>
+             
+             <button className='px-5 py-2.5 bg-white text-black rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors' onClick={() => navigate("/courses")}>
+                Manage Courses
+            </button>
+        </div>
+
+        {/* Welcome Section - Clean Card */}
+        <div className="bg-[#121214] rounded-xl p-8 border border-gray-800 flex flex-col md:flex-row items-center gap-8">
           <img
-            src={userData?.photoUrl || img}
-            alt="Educator"
-            className="w-28 h-28 rounded-full object-cover border-4 border-black shadow-md"
+              src={userData?.photoUrl || img}
+              alt="Educator"
+              className="w-24 h-24 rounded-full object-cover border border-gray-700"
           />
-          <div className="text-center md:text-left space-y-1">
-            <h1 className="text-2xl font-bold text-gray-800">
-              Welcome, {userData?.name || "Educator"} 👋
+          
+          <div className="text-center md:text-left space-y-2 flex-1">
+            <h1 className="text-2xl font-medium text-white">
+              Hello, {userData?.name || "Educator"}
             </h1>
-            <h1 className='text-xl font-semibold text-gray-800'>Total Earning : <span className='font-light text-gray-900'>₹{totalEarnings.toLocaleString()}</span>  </h1>
-            <p className="text-gray-600 text-sm">
-              {userData?.description || "Start creating amazing courses for your students!"}
+            <p className="text-gray-400 text-sm max-w-xl leading-relaxed">
+              {userData?.description || "Track your performance and manage your educational content from this central hub."}
             </p>
-            <h1 className='px-[10px] text-center  py-[10px] border-2  bg-black border-black text-white  rounded-[10px] text-[15px] font-light flex items-center justify-center gap-2 cursor-pointer' onClick={() => navigate("/courses")}>Create Courses</h1>
+             <div className="flex items-center justify-center md:justify-start gap-8 mt-6 pt-6 border-t border-gray-800/50">
+                <div>
+                    <span className="block text-xs text-gray-500 uppercase tracking-wider mb-1">Total Earnings</span>
+                    <span className="text-2xl font-mono text-white">₹{totalEarnings.toLocaleString()}</span>
+                </div>
+                <div>
+                    <span className="block text-xs text-gray-500 uppercase tracking-wider mb-1">Active Courses</span>
+                    <span className="text-2xl font-mono text-white">{creatorCourseData?.length || 0}</span>
+                </div>
+             </div>
           </div>
         </div>
 
-        {/* Graphs Section */}
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Graphs Section - Professional Charts */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Course Progress Chart */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-lg font-semibold mb-4">Course Progress (Lectures)</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={courseProgressData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="lectures" fill="black" radius={[5, 5, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="bg-[#121214] rounded-xl p-6 border border-gray-800">
+            <h2 className="text-sm font-medium mb-6 text-gray-400 uppercase tracking-wider">
+                Course Content Volume
+            </h2>
+            <div className="w-full h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={courseProgressData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                    <XAxis dataKey="name" stroke="#52525b" tick={{fill: '#71717a', fontSize: 12}} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#52525b" tick={{fill: '#71717a', fontSize: 12}} tickLine={false} axisLine={false} />
+                    <Tooltip 
+                        contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff' }} 
+                        itemStyle={{ color: '#fff' }}
+                        cursor={{fill: '#27272a'}}
+                    />
+                    <Bar dataKey="lectures" fill="#e4e4e7" radius={[2, 2, 0, 0]} barSize={30} />
+                </BarChart>
+                </ResponsiveContainer>
+            </div>
           </div>
 
           {/* Enrolled Students Chart */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-lg font-semibold mb-4">Student Enrollment</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={enrollData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="enrolled" fill="black" radius={[5, 5, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="bg-[#121214] rounded-xl p-6 border border-gray-800">
+            <h2 className="text-sm font-medium mb-6 text-gray-400 uppercase tracking-wider">
+                Student Enrollment
+            </h2>
+            <div className="w-full h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={enrollData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
+                    <XAxis dataKey="name" stroke="#52525b" tick={{fill: '#71717a', fontSize: 12}} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#52525b" tick={{fill: '#71717a', fontSize: 12}} tickLine={false} axisLine={false} />
+                     <Tooltip 
+                        contentStyle={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#fff' }} 
+                        itemStyle={{ color: '#fff' }}
+                        cursor={{fill: '#27272a'}}
+                    />
+                    <Bar dataKey="enrolled" fill="#52525b" radius={[2, 2, 0, 0]} barSize={30} />
+                </BarChart>
+                </ResponsiveContainer>
+            </div>
           </div>
         </div>
       </div>

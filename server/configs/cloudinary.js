@@ -10,11 +10,22 @@ const uploadOnCloudinary = async (filePath) => {
     if (!filePath) {
       return null;
     }
-    const uploadResult = await cloudinary.uploader.upload(filePath, { resource_type: 'auto' });
-    fs.unlinkSync(filePath);
-    return uploadResult.secure_url;
+    const uploadResult = await cloudinary.uploader.upload(filePath, { 
+        resource_type: 'auto',
+        timeout: 300000 // 5 minutes timeout
+    });
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+    }
+    return {
+        url: uploadResult.secure_url,
+        public_id: uploadResult.public_id,
+        duration: uploadResult.duration // duration in seconds (for videos)
+    };
   } catch (error) {
-    fs.unlinkSync(filePath);
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+    }
     console.log(error);
   }
 };

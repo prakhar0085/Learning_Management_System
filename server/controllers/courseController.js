@@ -55,7 +55,12 @@ export const editCourse = async (req, res) => {
     const { title, subTitle, description, category, level, price, isPublished } = req.body;
     let thumbnail;
     if (req.file) {
-      thumbnail = await uploadOnCloudinary(req.file.path);
+    if (req.file) {
+      const uploadResult = await uploadOnCloudinary(req.file.path);
+      if(uploadResult) {
+          thumbnail = uploadResult.url;
+      }
+    }
     }
     let course = await Course.findById(courseId);
     if (!course) {
@@ -193,8 +198,19 @@ export const editLecture = async (req, res) => {
     }
     let videoUrl;
     if (req.file) {
-      videoUrl = await uploadOnCloudinary(req.file.path);
-      lecture.videoUrl = videoUrl;
+      console.log("File received:", req.file);
+      const uploadResult = await uploadOnCloudinary(req.file.path);
+      console.log("Cloudinary Result:", uploadResult);
+      
+      if(!uploadResult || !uploadResult.url) {
+          return res.status(500).json({ message: 'Cloudinary upload failed' });
+      }
+      lecture.videoUrl = uploadResult.url;
+      if (uploadResult.duration) {
+          lecture.duration = uploadResult.duration;
+      }
+    } else {
+        console.log("No file received");
     }
     if (lectureTitle) {
       lecture.lectureTitle = lectureTitle;
@@ -204,7 +220,8 @@ export const editLecture = async (req, res) => {
     await lecture.save();
     return res.status(200).json(lecture);
   } catch (error) {
-    return res.status(500).json({ message: `Failed to edit Lectures ${error}` });
+    console.error("Edit Lecture Error:", error);
+    return res.status(500).json({ message: `Failed to edit Lectures: ${error.message}` });
   }
 };
 

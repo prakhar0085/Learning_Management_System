@@ -29,46 +29,72 @@ function Nav() {
   }
   return (
     <div>
-    <div className='w-[100%] h-[70px] fixed top-0 px-[20px] py-[10px] flex items-center justify-between bg-[#00000047]  z-10'>
-     <div className='lg:w-[20%] w-[40%] lg:pl-[50px] '>
-        <img src={logo} className=' w-[60px]  rounded-[5px] border-2 border-white cursor-pointer' onClick={()=>navigate("/")} alt="" />
-      
+    <div className='w-full h-[70px] fixed top-0 px-6 py-2 flex items-center justify-between glass-nav z-50 transition-all duration-300'>
+     <div className='flex items-center gap-2'>
+        <img src={logo} className='h-[45px] rounded border-2 border-white/10 cursor-pointer hover:border-white transition-colors' onClick={()=>navigate("/")} alt="Logo" />
+        <span className='text-white font-bold text-lg hidden md:block tracking-wide'>SkillSprint</span>
      </div>
      
-     <div className='w-[30%] lg:flex items-center justify-center gap-4 hidden'>
+     {/* Centered Navigation Links */}
+     <div className="hidden lg:flex items-center gap-1 bg-black/40 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/10 mx-auto">
+        <span className="text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 px-5 py-2 rounded-full cursor-pointer transition-all" onClick={()=>navigate("/")}>Home</span>
+        <span className="text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 px-5 py-2 rounded-full cursor-pointer transition-all" onClick={()=>navigate("/allcourses")}>Courses</span>
+        <span className="text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 px-5 py-2 rounded-full cursor-pointer transition-all" onClick={()=>navigate("/reviews")}>Reviews</span>
+         <span className="text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 px-5 py-2 rounded-full cursor-pointer transition-all" onClick={()=>navigate("/about")}>About</span>
+     </div>
 
+     <div className='flex items-center justify-end gap-4'> 
         
-        {!userData ? <IoMdPerson className='w-[50px] h-[50px] fill-white cursor-pointer border-[2px] border-[#fdfbfb] bg-[#000000d5] rounded-full p-[10px]'onClick={()=>setShowPro(prev=>!prev)}/>:
+        {userData && (
+            <div className='flex items-center gap-4'>
+                 {/* Profile Icon */}
+                 <div className='relative group' onClick={()=>setShowPro(prev=>!prev)}>
+                    <div className='w-[40px] h-[40px] rounded-full border-2 border-purple-500 overflow-hidden cursor-pointer hover:scale-105 transition-transform bg-gray-800 flex items-center justify-center'>
+                         {userData.photoUrl ? (
+                             <img src={userData.photoUrl} className='w-full h-full object-cover' alt="Profile" />
+                         ) : (
+                             <div className='text-white font-bold text-lg'>{userData?.name?.charAt(0).toUpperCase() || "U"}</div>
+                         )}
+                    </div>
+                </div>
 
+                {userData?.role === "educator" && (
+                    <button className='px-4 py-2 border border-purple-500/30 text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 rounded-lg text-sm font-medium cursor-pointer transition-all' onClick={()=>navigate("/dashboard")}>
+                        Dashboard
+                    </button>
+                )}
+                 
+                 <button className='px-4 py-2 bg-white text-black rounded-lg shadow-sm text-sm font-bold cursor-pointer hover:bg-gray-200 transition-colors' onClick={handleLogout}>
+                    LogOut
+                 </button>
+            </div>
+        )}
         
-        
-       <div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] border-2 bg-black  border-white cursor-pointer' onClick={()=>setShowPro(prev=>!prev)}>
-         {userData.photoUrl ? <img src={userData.photoUrl} className='w-[100%] h-[100%] rounded-full object-cover' alt="" />
-         :
-         <div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] border-2 bg-black  border-white cursor-pointer' >{userData?.name.slice(0,1).toUpperCase()}</div>}
-          </div>}
-           {userData?.role == "educator" ? <div className='px-[20px] py-[10px] border-2 lg:border-white border-black lg:text-white bg-[black] text-black rounded-[10px] text-[18px] font-light flex gap-2 cursor-pointer' onClick={()=>navigate("/dashboard")}>Dashboard</div>
-           :""}
-        {!userData && <span className='px-[20px] py-[10px] border-2 border-white text-white rounded-[10px] text-[18px] font-light cursor-pointer bg-[#000000d5] ' onClick={()=>navigate("/login")}>Login</span>}
-        {userData && <span className='px-[20px] py-[10px] bg-white text-black rounded-[10px] shadow-sm shadow-black text-[18px] cursor-pointer' onClick={handleLogout}>LogOut</span>}
-       
+        {!userData && (
+            <div className='flex items-center gap-3'>
+                {!userData && <IoMdPerson className='w-10 h-10 text-white bg-white/10 p-2 rounded-full cursor-pointer hover:bg-white/20 transition-colors' onClick={()=>setShowPro(prev=>!prev)}/>}
+                 <button className='px-6 py-2 border border-white/20 text-white bg-white/5 hover:bg-white rounded-full text-sm font-medium cursor-pointer hover:text-black transition-all duration-300' onClick={()=>navigate("/login")}>
+                    Login
+                </button>
+            </div>
+        )}
 
      </div>
-     {showPro && <div className=' absolute top-[110%] right-[15%] flex items-center flex-col justify-center gap-2 text-[16px] rounded-md bg-[white] px-[15px] py-[10px] border-[2px]  border-black hover:border-white hover:text-white cursor-pointer hover:bg-black  ' >
-      <span className='bg-[black] text-white  px-[30px] py-[10px] rounded-2xl hover:bg-gray-600' onClick={()=>navigate("/profile")}>My Profile</span>
-      <span className='bg-[black] text-white hover:bg-gray-600  px-[25px] py-[10px] rounded-2xl' onClick={()=>navigate("/enrolledcourses")}>My Courses</span>
+     {showPro && <div className=' absolute top-[110%] right-[5%] flex items-center flex-col justify-center gap-2 text-[14px] rounded-xl bg-[#09090b] px-[15px] py-[15px] border border-gray-800 shadow-2xl z-50 min-w-[200px]' >
+      <span className='w-full text-left text-gray-300 px-4 py-2 rounded-lg hover:bg-white/10 cursor-pointer transition-colors' onClick={()=>navigate("/profile")}>My Profile</span>
+      <span className='w-full text-left text-gray-300 px-4 py-2 rounded-lg hover:bg-white/10 cursor-pointer transition-colors' onClick={()=>navigate("/enrolledcourses")}>My Courses</span>
        </div>}
      <GiHamburgerMenu className='w-[30px] h-[30px] lg:hidden fill-white cursor-pointer ' onClick={()=>setShowHam(prev=>!prev)}/>
       
      
     </div>
-    <div className={`fixed  top-0 w-[100vw] h-[100vh] bg-[#000000d6] flex items-center justify-center flex-col gap-5 z-10 ${showHam?"translate-x-[0%] transition duration-600  ease-in-out" :"translate-x-[-100%] transition duration-600  ease-in-out"}`}>
+    <div className={`fixed top-0 w-full h-screen glass-nav flex items-center justify-center flex-col gap-6 z-40 transition-transform duration-500 ease-in-out ${showHam ? "translate-x-0" : "-translate-x-full"}`}>
      <GiSplitCross  className='w-[35px] h-[35px] fill-white absolute top-5 right-[4%]' onClick={()=>setShowHam(prev=>!prev)}/>
       {!userData ? <IoMdPerson className='w-[50px] h-[50px] fill-white cursor-pointer border-[2px] border-[#fdfbfb7a] bg-[#000000d5] rounded-full p-[10px]'/>:
       <div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] border-2 bg-black  border-white cursor-pointer' onClick={()=>setShowPro(prev=>!prev)}>
          {userData.photoUrl ? <img src={userData.photoUrl} className='w-[100%] h-[100%] rounded-full object-cover ' alt="" />
          :
-         <div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] border-2 bg-black  border-white cursor-pointer' >{userData?.name.slice(0,1).toUpperCase()}</div>}</div>
+         <div className='w-[50px] h-[50px] rounded-full text-white flex items-center justify-center text-[20px] border-2 bg-black  border-white cursor-pointer' >{userData?.name?.slice(0,1).toUpperCase()}</div>}</div>
       }
       
       <span className='flex items-center justify-center gap-2  text-white border-[2px] border-[#fdfbfb7a] bg-[#000000d5] rounded-lg px-[65px] py-[20px] text-[18px] ' onClick={()=>navigate("/profile")}>My Profile </span>

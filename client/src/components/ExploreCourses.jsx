@@ -12,50 +12,49 @@ import { useNavigate } from 'react-router-dom';
 function ExploreCourses() {
   const navigate = useNavigate()
   return (
-    <div className='w-[100vw] min-h-[50vh] lg:h-[50vh] flex flex-col lg:flex-row items-center justify-center gap-4 px-[30px]'>
-        <div className='w-[100%] lg:w-[350px] lg:h-[100%] h-[400px]  flex flex-col items-start justify-center gap-1 md:px-[40px]  px-[20px]'>
-          <span className='text-[35px] font-semibold'>Explore</span>
-          <span className='text-[35px] font-semibold'>Our Courses</span>
-          <p className='text-[17px]'>Go from basics to advanced mastery in today's most popular technologies. Our deep-dive courses on the MERN Stack, Java, Python, and Data Science are designed to make you a confident and competitive developer in the job market.</p>
-          <button className='px-[20px] py-[10px] border-2 bg-[black] border-white text-white rounded-[10px] text-[18px] font-light flex gap-2 mt-[40px]' onClick={()=>navigate("/allcourses")}>Explore Courses <SiViaplay className='w-[30px] h-[30px] fill-white' /></button>
+    <div className='w-full py-20 px-6 bg-black relative overflow-hidden'>
+        
+        {/* Background Gradients */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-        </div>
-        <div className='w-[720px] max-w-[90%] lg:h-[300px] md:min-h-[300px] flex items-center justify-center lg:gap-[60px] gap-[50px] flex-wrap mb-[50px] lg:mb-[0px]'>
-          <div className='w-[100px] h-[130px] font-light text-[13px] flex flex-col gap-3 text-center '>
-            <div className='w-[100px] h-[90px] bg-[#fbd9fb] rounded-lg flex items-center justify-center '><TbDeviceDesktopAnalytics className='w-[60px] h-[60px] text-[#6d6c6c]' /></div>
-            Web Devlopment
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16 relative z-10">
+            
+            <div className='w-full lg:w-1/3 flex flex-col items-start gap-6'>
+              <h2 className='text-5xl font-bold text-white leading-tight'>
+                 Explore <br />
+                 <span className='text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400'>Our Courses</span>
+              </h2>
+              <p className='text-lg text-gray-400 leading-relaxed'>
+                Go from basics to advanced mastery in today's most popular technologies. Our deep-dive courses on the MERN Stack, Java, Python, and Data Science are designed to make you a confident developer.
+              </p>
+              <button 
+                className='px-8 py-3 mt-4 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-lg font-medium hover:bg-white/20 transition-all shadow-lg flex items-center gap-3 group' 
+                onClick={()=>navigate("/allcourses")}
+              >
+                Start Exploring <SiViaplay className='w-5 h-5 group-hover:translate-x-1 transition-transform' />
+              </button>
             </div>
-            <div className='w-[100px] h-[130px] font-light text-[13px] flex flex-col gap-3 text-center '>
-            <div className='w-[100px] h-[90px] bg-[#d9fbe0] rounded-lg flex items-center justify-center '><LiaUikit className='w-[60px] h-[60px] text-[#6d6c6c]' /></div>
-            UI UX Designing
-            </div>
-            <div className='w-[100px] h-[130px] font-light text-[13px] flex flex-col gap-3 text-center'>
-            <div className='w-[100px] h-[90px] bg-[#fcb9c8] rounded-lg flex items-center justify-center '><MdAppShortcut className='w-[50px] h-[50px] text-[#6d6c6c]' /></div>
-            App Devlopment
-            </div>
-            <div className='w-[100px] h-[130px] font-light text-[13px] flex flex-col gap-3 text-center'>
-            <div className='w-[100px] h-[90px] bg-[#fbd9fb] rounded-lg flex items-center justify-center '><FaHackerrank className='w-[55px] h-[55px] text-[#6d6c6c]' /></div>
-            Ethical Hacking
-            </div>
-            <div className='w-[100px] h-[130px] font-light text-[13px] flex flex-col gap-3 text-center'>
-            <div className='w-[100px] h-[90px] bg-[#d9fbe0] rounded-lg flex items-center justify-center '><TbBrandOpenai className='w-[55px] h-[55px] text-[#6d6c6c]' /></div>
-            AI/ML
-            </div>
-            <div className='w-[100px] h-[130px] font-light text-[13px] flex flex-col gap-3 text-center'>
-            <div className='w-[100px] h-[90px] bg-[#fcb9c8] rounded-lg flex items-center justify-center '><SiGoogledataproc className='w-[45px] h-[45px] text-[#6d6c6c]' /></div>
-            Data Science
-            </div>
-            <div className='w-[100px] h-[130px] font-light text-[13px] flex flex-col gap-3 text-center '>
-            <div className='w-[100px] h-[90px] bg-[#fbd9fb] rounded-lg flex items-center justify-center '><BsClipboardDataFill className='w-[50px] h-[50px] text-[#6d6c6c]' /></div>
-            Data Analytics
-            </div>
-            <div className='w-[100px] h-[130px] font-light text-[13px] flex flex-col gap-3 text-center'>
-            <div className='w-[100px] h-[90px] bg-[#d9fbe0] rounded-lg flex items-center justify-center '><SiOpenaigym className='w-[50px] h-[50px] text-[#6d6c6c]' /></div>
-            AI Tools
-            </div>
-        </div>
 
-      
+            <div className='flex-1 grid grid-cols-2 md:grid-cols-4 gap-4 w-full'>
+               {[
+                 { Icon: TbDeviceDesktopAnalytics, label: "Web Development", color: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/20" },
+                 { Icon: LiaUikit, label: "UI/UX Design", color: "text-teal-400", bg: "bg-teal-500/10", border: "border-teal-500/20" },
+                 { Icon: MdAppShortcut, label: "App Development", color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20" },
+                 { Icon: FaHackerrank, label: "Ethical Hacking", color: "text-orange-400", bg: "bg-orange-500/10", border: "border-orange-500/20" },
+                 { Icon: TbBrandOpenai, label: "AI/ML", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20" },
+                 { Icon: SiGoogledataproc, label: "Data Science", color: "text-green-400", bg: "bg-green-500/10", border: "border-green-500/20" },
+                 { Icon: BsClipboardDataFill, label: "Data Analytics", color: "text-indigo-400", bg: "bg-indigo-500/10", border: "border-indigo-500/20" },
+                 { Icon: SiOpenaigym, label: "AI Tools", color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20" },
+               ].map((item, index) => (
+                 <div key={index} className={`flex flex-col items-center justify-center gap-4 p-6 rounded-2xl bg-white/5 backdrop-blur-sm border ${item.border} hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 cursor-pointer group shadow-lg shadow-black/50`}>
+                    <div className={`w-14 h-14 rounded-full ${item.bg} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                      <item.Icon className={`w-7 h-7 ${item.color}`} />
+                    </div>
+                    <span className="text-sm font-semibold text-gray-300 group-hover:text-white transition-colors text-center">{item.label}</span>
+                 </div>
+               ))}
+            </div>
+        </div>
     </div>
   )
 }

@@ -41,88 +41,131 @@ function SearchWithAi() {
     
   };
 
+  const [error, setError] = useState(null);
+
   const handleRecommendation = async (query) => {
+    setListening(false) // Stop listening immediately when processing starts
+    setError(null);
     try {
       const result = await axios.post(`${serverUrl}/api/ai/search`, { input: query }, { withCredentials: true });
       setRecommendations(result.data);
       if(result.data.length>0){
- speak("These are the top courses I found for you")
+         speak("These are the top courses I found for you")
       }else{
          speak("No courses found")
       }
-     
-      setListening(false)
     } catch (error) {
       console.log(error);
+      const msg = error.response?.data?.message || "AI Service Unavailable";
+      setError(msg);
+      speak("Sorry, I encountered an error.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black to-gray-900 text-white flex flex-col items-center px-4 py-16">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center px-4 py-16 relative overflow-hidden">
       
+       {/* Neon blurred spots */}
+       <div className="absolute top-[-100px] left-[20%] w-[500px] h-[500px] bg-purple-900/30 rounded-full blur-[150px] pointer-events-none"></div>
+       <div className="absolute bottom-[-100px] right-[20%] w-[500px] h-[500px] bg-teal-900/20 rounded-full blur-[150px] pointer-events-none"></div>
+
       {/* Search Container */}
-      <div className="bg-white shadow-xl rounded-3xl p-6 sm:p-8 w-full max-w-2xl text-center relative">
-        <FaArrowLeftLong  className='text-[black] w-[22px] h-[22px] cursor-pointer absolute' onClick={()=>navigate("/")}/>
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-600 mb-6 flex items-center justify-center gap-2">
-          <img src={ai} className='w-8 h-8 sm:w-[30px] sm:h-[30px]' alt="AI" />
-          Search with <span className='text-[#CB99C7]'>AI</span>
+      <div className="bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-3xl p-8 w-full max-w-3xl text-center relative z-10">
+        <FaArrowLeftLong  className='text-gray-400 hover:text-white transition-colors w-6 h-6 cursor-pointer absolute top-8 left-8' onClick={()=>navigate("/")}/>
+        
+        <h1 className="text-4xl font-bold mb-8 flex flex-col md:flex-row items-center justify-center gap-3 tracking-tight">
+          <div className="p-3 bg-purple-500/20 rounded-full shadow-[0_0_20px_rgba(168,85,247,0.5)]">
+             <img src={ai} className='w-8 h-8' alt="AI" />
+          </div>
+          <span>Search with <span className='text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400'>GenAI</span></span>
         </h1>
 
-        <div className="flex items-center bg-gray-700 rounded-full overflow-hidden shadow-lg relative w-full ">
-          
-          <input
-            type="text"
-            className="flex-grow px-4 py-3 bg-transparent text-white placeholder-gray-400 focus:outline-none text-sm sm:text-base"
-            placeholder="What do you want to learn? (e.g. AI, MERN, Cloud...)"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          
-          
-          {input && (
-            <button
-              onClick={() => handleRecommendation(input)}
-              className="absolute right-14 sm:right-16 bg-white rounded-full"
-            >
-              <img src={ai} className='w-10 h-10 p-2 rounded-full' alt="Search" />
-            </button>
-          )}
+        <div className="relative w-full group">
+          <div className={`absolute -inset-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 ${listening ? 'opacity-100 animate-pulse' : ''}`}></div>
+          <div className="relative flex items-center bg-gray-900 rounded-full overflow-hidden shadow-inner border border-white/10">
+            
+            <input
+              type="text"
+              className="flex-grow px-8 py-5 bg-transparent text-white placeholder-gray-500 focus:outline-none text-lg font-light"
+              placeholder="What do you want to learn today?"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleRecommendation(input)}
+            />
+            
+            {input && (
+              <button
+                onClick={() => handleRecommendation(input)}
+                className="absolute right-16 p-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full hover:scale-110 transition-transform"
+              >
+                <img src={ai} className='w-6 h-6' alt="Search" />
+              </button>
+            )}
 
-          <button
-            className="absolute right-2 bg-white rounded-full w-10 h-10 flex items-center justify-center"
-            onClick={handleSearch}
-          >
-            <RiMicAiFill className="w-5 h-5 text-[#cb87c5]" />
-          </button>
+            <button
+              className={`absolute right-3 w-12 h-12 rounded-full flex items-center justify-center transition-all ${listening ? 'bg-red-500/20 text-red-400' : 'bg-white/10 hover:bg-white/20 text-purple-400'}`}
+              onClick={handleSearch}
+            >
+              <RiMicAiFill className={`w-6 h-6 ${listening ? 'animate-ping' : ''}`} />
+            </button>
+          </div>
         </div>
+        
+        {error ? (
+             <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-300 text-sm">
+                 <p className="font-bold">Error</p>
+                 <p>{error}</p>
+                 <p className="text-xs mt-2 text-gray-400">Please try the manual search in "All Courses" instead.</p>
+             </div>
+        ) : (
+             <p className="mt-4 text-gray-500 text-sm">Try saying "Find me some advanced Python courses"</p>
+        )}
+        
       </div>
 
       {/* Recommendations */}
+      <div className="w-full max-w-7xl mt-16 px-4 z-10">
       {recommendations.length > 0 ? (
-        <div className="w-full max-w-6xl mt-12 px-2 sm:px-4">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-6 text-white text-center flex items-center justify-center gap-3">
-            <img src={ai1} className="w-10 h-10 sm:w-[60px] sm:h-[60px] p-2 rounded-full" alt="AI Results" />
-            AI Search Results 
+        <>
+          <h2 className="text-2xl font-bold mb-8 text-white text-center flex items-center justify-center gap-3">
+             <span className="w-2 h-8 bg-purple-500 rounded-full"></span>
+             AI Recommendations
           </h2>
        
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {recommendations.map((course, index) => (
               <div
                 key={index}
-                className="bg-white text-black p-5 rounded-2xl shadow-md hover:shadow-indigo-500/30 transition-all duration-200 border border-gray-200 cursor-pointer hover:bg-gray-200"
+                className="bg-white/5 backdrop-blur-md p-6 rounded-2xl border border-white/10 hover:border-purple-500/50 hover:bg-white/10 transition-all duration-300 cursor-pointer group flex flex-col gap-3"
                 onClick={() => navigate(`/viewcourse/${course._id}`)}
               >
-                <h3 className="text-lg font-bold sm:text-xl">{course.title}</h3>
-                <p className="text-sm text-gray-600 mt-1">{course.category}</p>
+                <div className="flex items-start justify-between">
+                     <span className="text-xs font-bold text-purple-400 uppercase tracking-widest border border-purple-500/30 px-2 py-1 rounded">{course.category}</span>
+                     <span className="text-gray-400 group-hover:text-white transition-colors">↗</span>
+                </div>
+                <h3 className="text-xl font-bold text-white leading-tight group-hover:text-purple-300 transition-colors">{course.title}</h3>
+                <p className="text-sm text-gray-400 line-clamp-2">Click to view course details and modules.</p>
               </div>
             ))}
           </div>
-        </div>
+        </>
       ) : (
-        listening? <h1 className='text-center text-xl sm:text-2xl mt-10 text-gray-400'>Listening...</h1>:<h1 className='text-center text-xl sm:text-2xl mt-10 text-gray-400'>No Courses Found</h1>
-       
+        listening ? (
+             <div className="mt-20 flex flex-col items-center gap-4">
+                 <div className="flex gap-2">
+                    <div className="w-4 h-4 bg-purple-500 rounded-full animate-bounce"></div>
+                    <div className="w-4 h-4 bg-pink-500 rounded-full animate-bounce delay-100"></div>
+                    <div className="w-4 h-4 bg-blue-500 rounded-full animate-bounce delay-200"></div>
+                 </div>
+                 <h1 className='text-2xl font-light text-gray-300'>Listening...</h1>
+             </div>
+        ) : (
+             <div className="mt-20 text-center">
+                 <h1 className='text-2xl font-light text-gray-600'>No results yet. Try searching for something!</h1>
+             </div>
+        )
       )}
+      </div>
     </div>
   );
 }

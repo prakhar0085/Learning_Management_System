@@ -29,19 +29,33 @@ export const createOrder = async (req, res) => {
   }
 };
 
+import crypto from 'crypto';
+
 export const verifyPayment = async (req, res) => {
   try {
-    const { razorpay_order_id, courseId, userId } = req.body;
-    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
-    if (orderInfo.status === 'paid') {
-      // Update user and course enrollment
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, courseId, userId } = req.body;
+
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+    const expectedSignature = crypto
+      .createHmac('sha256', process.env.RAZORPAY_SECRET)
+      .update(body.toString())
+      .digest('hex');
+
+    const isAuthentic = expectedSignature === razorpay_signature;
+
+    if (isAuthentic) {
+      // Payment is legit. Proceed with database updates.
+
+      // 1. Update User Enrollment
       const user = await User.findById(userId);
       if (!user.enrolledCourses.includes(courseId)) {
         user.enrolledCourses.push(courseId);
         await user.save();
       }
 
-      const course = await Course.findById(courseId).populate('lectures');
+      // 2. Update Course Student List
+      const course = await Course.findById(courseId).populate('lectures'); // populate needed? maybe not for pushing ID but keeping logic
       if (!course.enrolledStudents.includes(userId)) {
         course.enrolledStudents.push(userId);
         await course.save();
@@ -49,7 +63,7 @@ export const verifyPayment = async (req, res) => {
 
       return res.status(200).json({ message: 'Payment verified and enrollment successful' });
     } else {
-      return res.status(400).json({ message: 'Payment verification failed (invalid signature)' });
+      return res.status(400).json({ message: 'Payment verification failed (Invalid Signature)' });
     }
   } catch (error) {
     console.log(error);

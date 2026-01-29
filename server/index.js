@@ -78,7 +78,10 @@ app.get('/', (req, res) => {
   res.send('Hello From Server');
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log('Server Started');
   connectDb();
 });
+
+// Increase timeout to 10 minutes (600000 ms) to handle slow video uploads
+server.setTimeout(600000);

@@ -30,54 +30,61 @@ const CreateCourse = () => {
 
     return (
         
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-10">
-            <div className="max-w-xl w-[600px] mx-auto p-6 bg-white shadow-md rounded-md mt-10 relative">
-                <FaArrowLeftLong  className='top-[8%] absolute left-[5%] w-[22px] h-[22px] cursor-pointer' onClick={()=>navigate("/courses")}/>
-                <h2 className="text-2xl font-semibold mb-6 text-center">Create Course</h2>
+        <div className="min-h-screen flex items-center justify-center bg-[#09090b] px-4 md:px-0">
+             
+            <div className="max-w-md w-full mx-auto p-8 bg-[#121214] border border-gray-800 rounded-xl relative">
+                <button onClick={()=>navigate("/courses")} className='absolute top-6 left-6 text-gray-400 hover:text-white transition-colors'>
+                    <FaArrowLeftLong className='w-4 h-4' />
+                </button>
+                
+                <div className="text-center mb-8 mt-4">
+                    <h2 className="text-2xl font-semibold text-white tracking-tight">Create New Course</h2>
+                    <p className="text-gray-500 text-sm mt-2">Enter the basics to get started.</p>
+                </div>
 
                 <form className="space-y-5" onSubmit={(e)=>e.preventDefault()}>
                     {/* Course Title */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wide">
                             Course Title
                         </label>
                         <input
                             type="text"
-                            placeholder="Enter course title"
-                            className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[black]"
+                            placeholder="e.g. Advanced System Design"
+                            className="w-full bg-[#09090b] border border-gray-700 rounded-lg px-4 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-white focus:ring-0 transition-colors text-sm"
                             onChange={(e)=>setTitle(e.target.value)} value={title}
                         />
                     </div>
 
                     {/* Category */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                         <label className="block text-xs font-medium text-gray-400 mb-1.5 uppercase tracking-wide">
                             Category
                         </label>
                         <select
-                            className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[black]"
+                            className="w-full bg-[#09090b] border border-gray-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-white focus:ring-0 transition-colors appearance-none cursor-pointer text-sm"
                             onChange={(e)=>setCategory(e.target.value)}
                         >
-                            <option value="">Select category</option>
-                            <option value="App Development">App Development</option>
-                             <option value="AI/ML">AI/ML</option>
-                            <option value="AI Tools">AI Tools
+                            <option value="" className="bg-[#09090b] text-gray-500">Select category</option>
+                            <option value="App Development" className="bg-[#09090b]">App Development</option>
+                             <option value="AI/ML" className="bg-[#09090b]">AI/ML</option>
+                            <option value="AI Tools" className="bg-[#09090b]">AI Tools
                             </option>
-                             <option value="Data Science">Data Science</option>
-                            <option value="Data Analytics">Data Analytics</option>
-                            <option value="Ethical Hacking">Ethical Hacking</option>
-                            <option value="UI UX Designing">UI UX Designing</option>
-                            <option value="Web Development">Web Development</option>
-                            <option value="Others">Others</option>
+                             <option value="Data Science" className="bg-[#09090b]">Data Science</option>
+                            <option value="Data Analytics" className="bg-[#09090b]">Data Analytics</option>
+                            <option value="Ethical Hacking" className="bg-[#09090b]">Ethical Hacking</option>
+                            <option value="UI UX Designing" className="bg-[#09090b]">UI UX Designing</option>
+                            <option value="Web Development" className="bg-[#09090b]">Web Development</option>
+                            <option value="Others" className="bg-[#09090b]">Others</option>
                         </select>
                     </div>
 
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        className="w-full bg-[black] text-white py-2 px-4 rounded-md active:bg-[#3a3a3a] transition" disabled={loading} onClick={CreateCourseHandler}
+                        className="w-full bg-white text-black py-3 rounded-lg font-semibold text-sm hover:bg-gray-200 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2" disabled={loading} onClick={CreateCourseHandler}
                     >
-                        {loading?<ClipLoader size={30} color='white' /> : "Create"}
+                        {loading?<ClipLoader size={16} color='black' /> : "Create Course"}
                     </button>
                 </form>
             </div>

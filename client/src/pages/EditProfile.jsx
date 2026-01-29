@@ -44,44 +44,57 @@ function EditProfile() {
       }
       
      }
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-10">
-      <div className="bg-white rounded-2xl shadow-lg p-8 max-w-xl w-full relative">
-        <FaArrowLeftLong  className='absolute top-[5%] left-[5%] w-[22px] h-[22px] cursor-pointer' onClick={()=>navigate("/profile")}/>
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Edit Profile</h2>
 
-        <form  className="space-y-5" onSubmit={(e)=>e.preventDefault()}>
-          {/* Profile Photo */}
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-slate-900 px-4 py-10 relative overflow-hidden">
+      
+       {/* Ambient Background */}
+       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+          <div className="absolute bottom-[20%] left-[10%] w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px]"></div>
+       </div>
+
+      <div className="glass-effect rounded-3xl shadow-2xl p-8 max-w-lg w-full relative z-10 border border-white/10">
+        <FaArrowLeftLong  className='absolute top-6 left-6 w-5 h-5 cursor-pointer text-gray-400 hover:text-white transition-colors' onClick={()=>navigate("/profile")}/>
+        
+        <h2 className="text-3xl font-bold text-center text-white mb-2">Edit Profile</h2>
+        <p className="text-gray-400 text-center mb-8 text-sm">Update your personal information</p>
+
+        <form className="space-y-6" onSubmit={(e)=>e.preventDefault()}>
           
-           <div className="flex flex-col items-center text-center">
-          {userData.photoUrl ? <img
-            src={userData?.photoUrl}
-            alt=""
-            className="w-24 h-24 rounded-full object-cover border-4 border-[black]"
-          /> : <div className='w-24 h-24 rounded-full text-white flex items-center justify-center text-[30px] border-2 bg-black  border-white cursor-pointer'>
-         {userData?.name.slice(0,1).toUpperCase()}
-          </div>}
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-700">Select Avatar</label>
-            <input
-              type="file"
-              name="photoUrl"
-            
-              placeholder="Photo URL"
-              className="w-full px-4 py-2 border rounded-md text-sm "
-              onChange={(e)=>setPhotoUrl(e.target.files[0])}
-            />
+          {/* Avatar Section */}
+           <div className="flex flex-col items-center gap-4">
+              <div className="relative">
+                {userData.photoUrl ? <img
+                  src={userData?.photoUrl}
+                  alt=""
+                  className="w-28 h-28 rounded-full object-cover border-4 border-white/10 shadow-xl"
+                /> : <div className='w-28 h-28 rounded-full bg-white/5 border-4 border-white/10 flex items-center justify-center text-4xl text-white font-bold'>
+                  {userData?.name?.slice(0,1).toUpperCase()}
+                </div>}
+                <div className="absolute bottom-0 right-0 bg-purple-600 p-2 rounded-full cursor-pointer hover:bg-purple-500 transition shadow-lg">
+                    {/* Tiny edit icon concept */}
+                    <div className="w-3 h-3 bg-white rounded-full"></div>
+                </div>
+              </div>
+              
+              <div className="w-full">
+                <label className="block text-xs font-medium text-gray-400 mb-2 text-center uppercase tracking-wider">Change Avatar</label>
+                <input
+                  type="file"
+                  name="photoUrl"
+                  className="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-500 cursor-pointer bg-white/5 rounded-lg border border-white/10"
+                  onChange={(e)=>setPhotoUrl(e.target.files[0])}
+                />
+              </div>
           </div>
 
           {/* Name */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">Full Name</label>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Full Name</label>
             <input
               type="text"
               name="name"
-              
-              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[black] placeholder:text-black"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-light"
               placeholder={userData.name}
               onChange={(e)=>setName(e.target.value)}
               value={name}
@@ -89,28 +102,25 @@ function EditProfile() {
           </div>
 
           {/* Email (read-only) */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">Email</label>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Email</label>
             <input
               type="email"
-              
               readOnly
-              className="w-full mt-1 px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-600 placeholder:text-black"
+              className="w-full px-4 py-3 bg-black/20 border border-white/5 rounded-xl text-gray-500 cursor-not-allowed font-light"
               placeholder={userData.email}
+              value={userData.email} // Explicitly set value for read-only
             />
           </div>
 
-         
-
           {/* Description */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">Description</label>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Bio</label>
             <textarea
               name="description"
-             
-              className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-[black]"
-              rows={3}
-              placeholder="Tell us about yourself"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all font-light resize-none"
+              rows={4}
+              placeholder="Tell us a bit about yourself..."
               onChange={(e)=>setDescription(e.target.value)}
               value={description}
             />
@@ -119,14 +129,15 @@ function EditProfile() {
           {/* Save Button */}
           <button
             type="submit"
-            className="w-full bg-[black] active:bg-[#454545] text-white py-2 rounded-md font-medium transition cursor-pointer" disabled={loading} onClick={updateProfile}
+            className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-purple-500/30 hover:scale-[1.01] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-4" disabled={loading} onClick={updateProfile}
           >
-            {loading ? <ClipLoader size={30} color='white'/> : "Save Changes"}
+            {loading ? <ClipLoader size={24} color='white'/> : "Save Changes"}
           </button>
         </form>
       </div>
     </div>
   )
+
 }
 
 export default EditProfile

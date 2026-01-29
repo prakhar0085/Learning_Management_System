@@ -12,6 +12,10 @@ const lectureSchema = new mongoose.Schema(
     isPreviewFree: {
       type: Boolean,
     },
+    duration: {
+        type: Number, // duration in seconds
+        default: 0
+    }
   },
   { timestamps: true },
 );

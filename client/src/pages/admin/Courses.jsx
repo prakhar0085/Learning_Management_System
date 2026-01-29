@@ -39,101 +39,105 @@ function Courses() {
 
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-
-
-      <div className="w-[100%] min-h-screen p-4 sm:p-6   bg-gray-100">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 ">
-          <div className='flex items-center justify-center gap-3'><FaArrowLeftLong className=' w-[22px] h-[22px] cursor-pointer' onClick={() => navigate("/dashboard")} />
-            <h1 className="text-xl font-semibold">Courses</h1>
+    <div className="flex min-h-screen bg-[#09090b] text-white px-4 sm:px-6 py-10">
+      
+      <div className="w-full max-w-7xl mx-auto space-y-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 py-4 border-b border-gray-800">
+          <div className='flex items-center gap-4'>
+            <button className="p-2 rounded-lg hover:bg-gray-800 transition-colors text-gray-400 hover:text-white" onClick={() => navigate("/dashboard")}>
+                <FaArrowLeftLong className='w-5 h-5' />
+            </button>
+            <h1 className="text-2xl font-semibold text-white tracking-tight">Course Manager</h1>
           </div>
 
-          <button className="bg-[black] text-white px-4 py-2 rounded hover:bg-gray-500" onClick={() => navigate("/createcourses")}>
-            Create Course
+          <button 
+            className="bg-white text-black px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-gray-200 transition-colors shadow-sm" 
+            onClick={() => navigate("/createcourses")}
+          >
+            + New Course
           </button>
         </div>
 
-        {/* For larger screens (table layout) */}
-
-        <div className="hidden md:block bg-white rounded-xl shadow p-4 overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead className="border-b bg-gray-50">
+        {/* Desktop Table View */}
+        <div className="hidden md:block bg-[#121214] rounded-xl border border-gray-800 overflow-hidden">
+          <table className="min-w-full text-sm text-left">
+            <thead className="bg-[#18181b] border-b border-gray-800">
               <tr>
-                <th className="text-left py-3 px-4">Course</th>
-                <th className="text-left py-3 px-4">Price</th>
-                <th className="text-left py-3 px-4">Status</th>
-                <th className="text-left py-3 px-4">Action</th>
+                <th className="py-4 px-6 text-gray-400 font-medium uppercase tracking-wider text-xs">Course</th>
+                <th className="py-4 px-6 text-gray-400 font-medium uppercase tracking-wider text-xs">Price</th>
+                <th className="py-4 px-6 text-gray-400 font-medium uppercase tracking-wider text-xs">Status</th>
+                <th className="py-4 px-6 text-gray-400 font-medium uppercase tracking-wider text-xs text-right">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-800">
               {creatorCourseData?.map((course, index) => (
-
-                <tr key={index}
-
-                  className="border-b hover:bg-gray-50 transition duration-200"
-                >
-                  <td className="py-3 px-4 flex items-center gap-4">
-                    {course?.thumbnail ? <img
-                      src={course?.thumbnail}
-                      alt=""
-                      className="w-25 h-14 object-cover rounded-md"
-                    /> : <img src={img1} alt='' className="w-14 h-14 object-cover rounded-md object-fit" />}
-                    <span>{course?.title}</span>
+                <tr key={index} className="hover:bg-[#18181b] transition-colors">
+                  <td className="py-4 px-6 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded bg-gray-800 overflow-hidden border border-gray-700">
+                        {course?.thumbnail ? <img
+                        src={course?.thumbnail}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        /> : <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-500">N/A</div>}
+                    </div>
+                    <span className="font-medium text-white text-sm">{course?.title}</span>
                   </td>
-                  {course?.price ? <td className="py-3 px-4">₹{course?.price}</td> : <td className="py-3 px-4">₹ NA</td>}
-                  <td className="py-3 px-4">
-                    <span className={`  px-3 py-1 rounded-full text-xs ${course?.isPublished ? "text-green-600 bg-green-100" : "text-red-600 bg-red-100"}`}>
+                  <td className="py-4 px-6 text-gray-300 font-mono text-sm">
+                      {course?.price ? `₹${course?.price}` : 'Free'}
+                  </td>
+                  <td className="py-4 px-6">
+                    <span className={`px-2.5 py-1 rounded text-xs font-medium border ${course?.isPublished ? "bg-green-900/20 text-green-400 border-green-900/30" : "bg-yellow-900/20 text-yellow-400 border-yellow-900/30"}`}>
                       {course?.isPublished ? "Published" : "Draft"}
                     </span>
                   </td>
-                  <td className="py-3 px-4">
-                    <FaEdit className="text-gray-600 hover:text-blue-600 cursor-pointer" onClick={() => navigate(`/addcourses/${course?._id}`)} />
+                  <td className="py-4 px-6 text-right">
+                    <button className="p-2 rounded hover:bg-gray-800 text-gray-400 hover:text-white transition-colors" onClick={() => navigate(`/addcourses/${course?._id}`)}>
+                        <FaEdit className="w-4 h-4"/>
+                    </button>
                   </td>
                 </tr>
-              ))
-              }
+              ))}
             </tbody>
           </table>
-          <p className="text-center text-sm text-gray-400 mt-6">
-            A list of your recent courses.
-          </p>
+          {creatorCourseData?.length === 0 && (
+              <div className="p-12 text-center text-gray-500 bg-[#09090b]">
+                  <p>No courses found. Create your first course to get started.</p>
+              </div>
+          )}
         </div>
 
 
+        {/* Mobile View */}
         <div className="md:hidden space-y-4">
           {creatorCourseData?.map((course, index) => (
-            <div key={index}
-
-              className="bg-white rounded-lg shadow p-4 flex flex-col gap-3 "
-            >
+            <div key={index} className="bg-[#121214] rounded-xl p-5 border border-gray-800 flex flex-col gap-4">
               <div className="flex gap-4 items-center">
-                {course?.thumbnail ? <img
-                  src={course?.thumbnail}
+                <img
+                  src={course?.thumbnail || img1}
                   alt=""
-                  className="w-16 h-16 rounded-md object-cover"
-                /> : <img
-                  src={img1}
-                  alt=""
-                  className="w-16 h-16 rounded-md object-cover"
-                />}
-                <div className="flex-1">
-                  <h2 className="font-medium text-sm">{course?.title}</h2>
-                  {course?.price ? <p className="text-gray-600 text-xs mt-1">₹{course?.price}</p> : <p className="text-gray-600 text-xs mt-1">₹ NA</p>}
+                  className="w-16 h-16 rounded overflow-hidden border border-gray-700 object-cover"
+                />
+                <div className="flex-1 min-w-0">
+                  <h2 className="font-medium text-white truncate text-sm">{course?.title}</h2>
+                  <p className="text-gray-500 text-xs mt-1 font-mono">{course?.price ? `₹${course?.price}` : 'Free'}</p>
                 </div>
-                <FaEdit className="text-gray-600 hover:text-blue-600 cursor-pointer" onClick={() => navigate(`/addcourses/${course?._id}`)} />
               </div>
-              <span className={` w-fit px-3 py-1 text-xs rounded-full  ${course?.isPublished ? "text-green-600 bg-green-100" : "text-red-600 bg-red-100"}`}>
-                {course?.isPublished ? "Published" : "Draft"}
-              </span>
+              <div className="flex items-center justify-between pt-3 border-t border-gray-800">
+                  <span className={`px-2 py-0.5 rounded text-xs font-medium border ${course?.isPublished ? "bg-green-900/20 text-green-400 border-green-900/30" : "bg-yellow-900/20 text-yellow-400 border-yellow-900/30"}`}>
+                      {course?.isPublished ? "Published" : "Draft"}
+                  </span>
+                  <button className="flex items-center gap-2 text-xs text-gray-400 hover:text-white font-medium uppercase tracking-wide" onClick={() => navigate(`/addcourses/${course?._id}`)}>
+                     <FaEdit /> Edit Details
+                  </button>
+              </div>
             </div>
           ))}
-          <p className="text-center text-sm text-gray-400 mt-4 pl-[80px]">
-            A list of your recent courses.
-          </p>
-
+          {creatorCourseData?.length > 0 && (
+            <p className="text-center text-xs text-gray-600 mt-8 uppercase tracking-widest">
+                End of list
+            </p>
+          )}
         </div>
-
-
       </div>
     </div>
   );
