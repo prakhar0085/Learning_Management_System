@@ -196,7 +196,7 @@ export const editLecture = async (req, res) => {
     if (!lecture) {
       return res.status(404).json({ message: 'Lecture not found' });
     }
-    let videoUrl;
+
     if (req.file) {
       console.log("File received:", req.file);
       const uploadResult = await uploadOnCloudinary(req.file.path);
