@@ -11,6 +11,24 @@ import remarkGfm from 'remark-gfm';
 // strictly using what used to be in App.jsx or standard Vite proxy
 const API_URL = "http://localhost:8000/api"; 
 
+/* eslint-disable no-unused-vars */
+const markdownComponents = {
+    // Custom styling for markdown elements
+    p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+    ul: ({node, ...props}) => <ul className="list-disc ml-4 mb-2" {...props} />,
+    ol: ({node, ...props}) => <ol className="list-decimal ml-4 mb-2" {...props} />,
+    li: ({node, ...props}) => <li className="mb-1" {...props} />,
+    h1: ({node, ...props}) => <h1 className="text-lg font-bold mb-2" {...props} />,
+    h2: ({node, ...props}) => <h2 className="text-base font-bold mb-2" {...props} />,
+    h3: ({node, ...props}) => <h3 className="text-sm font-bold mb-1" {...props} />,
+    code: ({node, inline, className, children, ...props}) => {
+        return inline ? 
+            <code className="bg-gray-200 dark:bg-gray-700 rounded px-1 py-0.5 font-mono text-xs" {...props}>{children}</code> :
+            <code className="block bg-gray-200 dark:bg-gray-700 rounded p-2 my-2 font-mono text-xs overflow-x-auto" {...props}>{children}</code>
+    }
+};
+/* eslint-enable no-unused-vars */ 
+
 const VoiceChatAssistant = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
@@ -23,6 +41,12 @@ const VoiceChatAssistant = () => {
     const recognitionRef = useRef(null);
     const synthRef = useRef(window.speechSynthesis);
     const chatEndRef = useRef(null);
+    const handleUserMessageRef = useRef(null);
+
+    // Keep ref updated with latest callback
+    useEffect(() => {
+        handleUserMessageRef.current = handleUserMessage;
+    });
 
     // Personalize greeting when userData loads
     useEffect(() => {
@@ -59,14 +83,18 @@ const VoiceChatAssistant = () => {
         recognition.onend = () => setIsListening(false);
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
-            handleUserMessage(transcript, true);
+            if (handleUserMessageRef.current) {
+                handleUserMessageRef.current(transcript, true);
+            }
         };
 
         recognitionRef.current = recognition;
         
+        // Copy ref value for cleanup
+        const synth = synthRef.current;
         return () => {
             if (recognitionRef.current) recognitionRef.current.stop();
-            if (synthRef.current) synthRef.current.cancel();
+            if (synth) synth.cancel();
         };
     }, []);
 
@@ -170,21 +198,7 @@ const VoiceChatAssistant = () => {
                                 }`}>
                                     <ReactMarkdown 
                                         remarkPlugins={[remarkGfm]}
-                                        components={{
-                                            // Custom styling for markdown elements
-                                            p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
-                                            ul: ({node, ...props}) => <ul className="list-disc ml-4 mb-2" {...props} />,
-                                            ol: ({node, ...props}) => <ol className="list-decimal ml-4 mb-2" {...props} />,
-                                            li: ({node, ...props}) => <li className="mb-1" {...props} />,
-                                            h1: ({node, ...props}) => <h1 className="text-lg font-bold mb-2" {...props} />,
-                                            h2: ({node, ...props}) => <h2 className="text-base font-bold mb-2" {...props} />,
-                                            h3: ({node, ...props}) => <h3 className="text-sm font-bold mb-1" {...props} />,
-                                            code: ({node, inline, className, children, ...props}) => {
-                                                return inline ? 
-                                                    <code className="bg-gray-200 dark:bg-gray-700 rounded px-1 py-0.5 font-mono text-xs" {...props}>{children}</code> :
-                                                    <code className="block bg-gray-200 dark:bg-gray-700 rounded p-2 my-2 font-mono text-xs overflow-x-auto" {...props}>{children}</code>
-                                            }
-                                        }}
+                                        components={markdownComponents}
                                     >
                                         {msg.text}
                                     </ReactMarkdown>

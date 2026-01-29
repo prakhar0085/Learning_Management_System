@@ -7,7 +7,7 @@ import Cardspage from '../components/Cardspage';
 import ExploreCourses from '../components/ExploreCourses';
 import About from '../components/About';
 import ai from '../assets/ai.png'
-import ai1 from '../assets/SearchAi.png'
+
 import ReviewPage from '../components/ReviewPage';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';

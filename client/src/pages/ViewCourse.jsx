@@ -24,28 +24,14 @@ function ViewCourse() {
     const [selectedLecture, setSelectedLecture] = useState(null);
     const {lectureData} = useSelector(state=>state.lecture)
     const {selectedCourseData} = useSelector(state=>state.course)
-  const [selectedCreatorCourse,setSelectedCreatorCourse] = useState([])
+
    const [isEnrolled, setIsEnrolled] = useState(false);
-   const [rating, setRating] = useState(0);
-   const [comment, setComment] = useState("");
    
    
   
 
 
-  const handleReview = async () => {
-    try {
-      const result = await axios.post(serverUrl + "/api/review/givereview" , {rating , comment , courseId} , {withCredentials:true})
-      toast.success("Review Added")
-      console.log(result.data)
-      setRating(0)
-      setComment("")
 
-    } catch (error) {
-      console.log(error)
-      toast.error(error.response.data.message)
-    }
-  }
   
 
   const calculateAverageRating = (reviews) => {
@@ -118,16 +104,7 @@ console.log("Average Rating:", avgRating);
    
 
 
-  useEffect(() => {
-  if (creatorData?._id && courseData.length > 0) {
-    const creatorCourses = courseData.filter(
-      (course) =>
-        course.creator === creatorData._id && course._id !== courseId // Exclude current course
-    );
-    setSelectedCreatorCourse(creatorCourses);
-  
-  }
-}, [creatorData, courseData, courseId]);
+
 
  
 const handleEnroll = async (courseId, userId) => {

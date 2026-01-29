@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FaPlayCircle } from 'react-icons/fa';
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -47,7 +47,7 @@ function ViewLecture() {
         }
     };
     fetchFreshData();
-  }, [courseId, selectedLecture?._id]); // Add selectedLecture._id to dependencies to retry if selection changes before fetch completes (optional but safer)
+  }, [courseId, selectedLecture]);
 
   const courseCreator = userData?._id === selectedCourse?.creator ? userData : null;
 

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReviewCard from './ReviewCard';
 import { useSelector } from 'react-redux';
 import { IoClose } from 'react-icons/io5';
 import { FaStar } from 'react-icons/fa6';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+
 
 function ReviewPage() {
     const { allReview } = useSelector(state => state.review);
