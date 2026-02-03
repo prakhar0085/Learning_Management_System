@@ -29,9 +29,7 @@ import AboutPage from './pages/AboutPage'
 import ReviewsPage from './pages/ReviewsPage'
 import VoiceChatAssistant from './components/VoiceChatAssistant'
 
-// export const serverUrl = "http://localhost:8000"
 
-// export const serverUrl = import.meta.env.VITE_API_URL;
 
 
 

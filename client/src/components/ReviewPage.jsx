@@ -3,6 +3,7 @@ import ReviewCard from './ReviewCard';
 import { useSelector } from 'react-redux';
 import { IoClose } from 'react-icons/io5';
 import { FaStar } from 'react-icons/fa6';
+import { serverUrl } from '../config';
 import axios from 'axios';
 
 
@@ -34,7 +35,7 @@ function ReviewPage() {
         
         try {
             setIsSubmitting(true);
-            const res = await axios.post('http://localhost:8000/api/review/givereview', {
+            const res = await axios.post(`${serverUrl}/api/review/givereview`, {
                 courseId: selectedCourseId,
                 rating,
                 comment

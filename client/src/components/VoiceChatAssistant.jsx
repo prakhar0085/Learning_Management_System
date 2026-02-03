@@ -9,7 +9,11 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 // Assuming global config or using relative path if proxy set, 
 // strictly using what used to be in App.jsx or standard Vite proxy
-const API_URL = "http://localhost:8000/api"; 
+import { serverUrl } from '../config';
+
+// Assuming global config or using relative path if proxy set, 
+// strictly using what used to be in App.jsx or standard Vite proxy
+const API_URL = `${serverUrl}/api`; 
 
 /* eslint-disable no-unused-vars */
 const markdownComponents = {
