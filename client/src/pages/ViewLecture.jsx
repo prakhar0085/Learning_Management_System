@@ -43,7 +43,7 @@ function ViewLecture() {
         }
     };
     fetchFreshData();
-  }, [courseId]); // Only fetch when courseId changes
+  }, [courseId, selectedLecture]); // Only fetch when courseId changes
 
   const courseCreator = userData?._id === selectedCourse?.creator ? userData : null;
 
