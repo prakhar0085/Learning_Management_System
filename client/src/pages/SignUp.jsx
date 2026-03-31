@@ -3,9 +3,7 @@ import logo from '../assets/logo.jpg'
 import google from '../assets/google.jpg'
 import axios from 'axios'
 import { serverUrl } from '../config';
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-
-import { MdRemoveRedEye } from "react-icons/md";
+import { MdOutlineRemoveRedEye, MdRemoveRedEye } from "react-icons/md";
 import { useNavigate } from 'react-router-dom'
 import { signInWithPopup } from 'firebase/auth'
 import { auth, provider } from '../../utils/Firebase'
@@ -13,6 +11,7 @@ import { ClipLoader } from 'react-spinners'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { setUserData } from '../redux/userSlice'
+
 function SignUp() {
     const [name,setName]= useState("")
     const [email,setEmail]= useState("")
@@ -28,30 +27,23 @@ function SignUp() {
         try {
             const result = await axios.post(serverUrl + "/api/auth/signup" , {name , email , password , role} , {withCredentials:true} )
             dispatch(setUserData(result.data))
-
             navigate("/")
             toast.success("SignUp Successfully")
             setLoading(false)
-        } 
-        catch (error) {
+        } catch (error) {
             console.log(error)
             setLoading(false)
             toast.error(error.response.data.message)
         }
-        
     }
+
     const googleSignUp = async () => {
         try {
             const response = await signInWithPopup(auth,provider)
-            console.log(response)
             let user = response.user
             let name = user.displayName;
-            let email=user.email
-            
-            
-            const result = await axios.post(serverUrl + "/api/auth/googlesignup" , {name , email ,role}
-                , {withCredentials:true}
-            )
+            let email = user.email
+            const result = await axios.post(serverUrl + "/api/auth/googlesignup" , {name , email , role} , {withCredentials:true})
             dispatch(setUserData(result.data))
             navigate("/")
             toast.success("SignUp Successfully")
@@ -59,122 +51,142 @@ function SignUp() {
             console.log(error)
             toast.error(error.response.data.message)
         }
-        
     }
-  return (
 
-    <div className='w-full h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-slate-900 to-black relative overflow-hidden'>
-       {/* Background decoration */}
-      <div className="absolute top-[-100px] left-[-100px] w-96 h-96 bg-purple-600 rounded-full blur-[150px] opacity-20 animate-pulse"></div>
-      <div className="absolute bottom-[-100px] right-[-100px] w-96 h-96 bg-teal-600 rounded-full blur-[150px] opacity-20 animate-pulse delay-700"></div>
+    return (
+        <div className="min-h-screen w-full bg-[#050505] flex items-center justify-center p-4 font-sans text-zinc-100 selection:bg-purple-500/30">
+            {/* Main Card Container */}
+            <div className="w-full max-w-[900px] flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.8)] border border-white/5">
 
-        <div className='w-[90%] md:w-[800px] h-auto min-h-[550px] glass-effect rounded-2xl flex shadow-2xl overflow-hidden z-10'>
-            <div className='md:w-[50%] w-full flex flex-col items-center justify-center gap-6 p-8 relative'>
-                <div className="text-center">
-                  <h1 className='font-bold text-white text-3xl mb-1'>Get Started</h1>
-                  <h2 className='text-gray-400 text-sm'>Create your account to start learning</h2>
-                </div>
-
-                <form className='flex flex-col gap-3 w-full px-4' onSubmit={(e)=>e.preventDefault()}>
-                    <div className='flex flex-col gap-1'>
-                        <label htmlFor="name" className='text-sm text-gray-300 font-medium'>Name</label>
-                        <input 
-                          id='name' 
-                          type="text" 
-                          className='w-full h-10 bg-white/5 border border-white/10 rounded-lg px-4 text-white focus:outline-none focus:border-purple-500 transition-all font-light' 
-                          placeholder='John Doe' 
-                          onChange={(e)=>setName(e.target.value)} 
-                          value={name} 
-                        />
+                {/* Left Side: Form */}
+                <div className="w-full md:w-1/2 bg-[#121214] p-8 md:p-12 flex flex-col justify-center border-r border-white/5 relative z-10">
+                    <div className="mb-8 text-center md:text-left">
+                        <h1 className="text-3xl font-bold text-white mb-2">Get Started</h1>
+                        <p className="text-zinc-400 text-sm">Create your account to start learning</p>
                     </div>
-                    <div className='flex flex-col gap-1'>
-                        <label htmlFor="email" className='text-sm text-gray-300 font-medium'>Email</label>
-                        <input 
-                          id='email' 
-                          type="text" 
-                          className='w-full h-10 bg-white/5 border border-white/10 rounded-lg px-4 text-white focus:outline-none focus:border-purple-500 transition-all font-light' 
-                          placeholder='name@example.com' 
-                          onChange={(e)=>setEmail(e.target.value)} 
-                          value={email} 
-                        />
-                    </div>
-                    <div className='flex flex-col gap-1 relative'>
-                        <label htmlFor="password" className='text-sm text-gray-300 font-medium'>Password</label>
-                        <input 
-                          id='password' 
-                          type={show?"text":"password"} 
-                          className='w-full h-10 bg-white/5 border border-white/10 rounded-lg px-4 text-white focus:outline-none focus:border-purple-500 transition-all font-light' 
-                          placeholder='••••••••' 
-                          onChange={(e)=>setPassword(e.target.value)} 
-                          value={password}
-                        />
-                         <div className="absolute right-4 top-[32px] text-gray-400 cursor-pointer hover:text-white transition-colors">
-                           {!show && <MdOutlineRemoveRedEye onClick={()=>setShow(prev => !prev)}/>}
-                           {show && <MdRemoveRedEye onClick={()=>setShow(prev => !prev)} />}
+
+                    <form className="space-y-4" onSubmit={(e)=>e.preventDefault()} autoComplete="off">
+                        {/* Name */}
+                        <div className="space-y-1.5">
+                            <label className="text-sm font-medium text-zinc-300">Name</label>
+                            <input 
+                                id="name"
+                                type="text"
+                                autoComplete="off"
+                                className="w-full bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all sm:text-sm"
+                                placeholder="John Doe"
+                                value={name}
+                                onChange={(e)=>setName(e.target.value)}
+                            />
                         </div>
-                    </div>
-                    
-                    <div className='flex w-full items-center justify-between gap-4 mt-1'>
-                      <span 
-                        className={`flex-1 text-center py-2 text-sm border rounded-full cursor-pointer transition-all ${role === 'student' ? "border-purple-500 bg-purple-500/20 text-white" : "border-white/20 text-gray-400 hover:border-white/50"}`} 
-                        onClick={()=>setRole("student")}
-                      >
-                        Student
-                      </span>
-                      <span 
-                        className={`flex-1 text-center py-2 text-sm border rounded-full cursor-pointer transition-all ${role === 'educator' ? "border-purple-500 bg-purple-500/20 text-white" : "border-white/20 text-gray-400 hover:border-white/50"}`}  
-                        onClick={()=>setRole("educator")}
-                      >
-                        Educator
-                      </span>
+
+                        {/* Email */}
+                        <div className="space-y-1.5">
+                            <label className="text-sm font-medium text-zinc-300">Email</label>
+                            <input 
+                                id="signup-email"
+                                type="email"
+                                autoComplete="off"
+                                className="w-full bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all sm:text-sm"
+                                placeholder="name@example.com"
+                                value={email}
+                                onChange={(e)=>setEmail(e.target.value)}
+                            />
+                        </div>
+
+                        {/* Password */}
+                        <div className="space-y-1.5">
+                            <label className="text-sm font-medium text-zinc-300">Password</label>
+                            <div className="relative">
+                                <input 
+                                    id="signup-password"
+                                    type={show?"text":"password"}
+                                    autoComplete="new-password"
+                                    className="w-full bg-[#18181b] border border-zinc-800 rounded-xl px-4 py-3 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all sm:text-sm pr-10 tracking-widest"
+                                    placeholder="••••••••"
+                                    value={password}
+                                    onChange={(e)=>setPassword(e.target.value)}
+                                />
+                                <button 
+                                    type="button"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors focus:outline-none"
+                                    onClick={()=>setShow(!show)}
+                                >
+                                    {show ? <MdOutlineRemoveRedEye size={18} /> : <MdRemoveRedEye size={18} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Role Selector */}
+                        <div className="flex gap-3 pt-1">
+                            <button
+                                type="button"
+                                className={`flex-1 py-2.5 text-sm font-medium rounded-xl border transition-all ${role === 'student' ? 'border-purple-500 bg-purple-500/15 text-white' : 'border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300'}`}
+                                onClick={()=>setRole("student")}
+                            >
+                                Student
+                            </button>
+                            <button
+                                type="button"
+                                className={`flex-1 py-2.5 text-sm font-medium rounded-xl border transition-all ${role === 'educator' ? 'border-purple-500 bg-purple-500/15 text-white' : 'border-zinc-800 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300'}`}
+                                onClick={()=>setRole("educator")}
+                            >
+                                Educator
+                            </button>
+                        </div>
+
+                        {/* Submit */}
+                        <div className="pt-2">
+                            <button 
+                                className="w-full bg-[#8b5cf6] hover:bg-[#7c3aed] text-white font-medium rounded-xl py-3 transition-colors active:scale-[0.98] flex items-center justify-center disabled:opacity-70 disabled:active:scale-100"
+                                onClick={handleSignUp}
+                                disabled={loading}
+                            >
+                                {loading ? <ClipLoader size={20} color="white" /> : "Sign Up"}
+                            </button>
+                        </div>
+
+                        <p className="text-center text-xs text-zinc-500 pt-1">
+                            Already have an account?{' '}
+                            <span 
+                                onClick={()=>navigate("/login")}
+                                className="text-[#a78bfa] hover:text-[#c4b5fd] cursor-pointer font-medium transition-colors"
+                            >
+                                Log in
+                            </span>
+                        </p>
+                    </form>
+
+                    <div className="my-6 flex items-center gap-3">
+                        <div className="flex-1 h-[1px] bg-zinc-800"></div>
+                        <span className="text-[10px] text-zinc-600 font-medium tracking-wider uppercase">Or continue with</span>
+                        <div className="flex-1 h-[1px] bg-zinc-800"></div>
                     </div>
 
                     <button 
-                      className='w-full h-10 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium rounded-lg hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center mt-2' 
-                      disabled={loading} 
-                      onClick={handleSignUp}
+                        className="w-full bg-transparent hover:bg-zinc-800/50 border border-zinc-700 text-zinc-300 font-medium rounded-xl py-3 flex items-center justify-center gap-3 transition-colors active:scale-[0.98] group"
+                        onClick={googleSignUp}
                     >
-                      {loading?<ClipLoader size={24} color='white' /> : "Sign Up"}
+                        <img src={google} className="w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity" alt="Google" />
+                        <span className="text-sm">Google</span>
                     </button>
-                    
-                     <div className='text-center text-xs text-gray-400'>
-                         Already have an account? <span className='text-purple-400 underline cursor-pointer hover:text-purple-300 ml-1' onClick={()=>navigate("/login")}>Login</span>
-                     </div>
-                </form>
-
-                 <div className='w-full px-4'>
-                    <div className='flex items-center gap-3 my-2'>
-                        <div className='flex-1 h-[1px] bg-white/10'></div>
-                        <div className='text-xs text-gray-500 uppercase'>Or</div>
-                         <div className='flex-1 h-[1px] bg-white/10'></div>
-                    </div>
-
-                    <div 
-                      className='w-full h-10 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg flex items-center justify-center cursor-pointer transition-all gap-3 group' 
-                      onClick={googleSignUp} 
-                    >
-                      <img src={google} alt="" className='w-5 h-5 opacity-80 group-hover:opacity-100 transition-opacity' />
-                      <span className='text-sm text-gray-300 group-hover:text-white font-medium'>Google</span> 
-                    </div>
                 </div>
 
+                {/* Right Side: Brand Showcase */}
+                <div className="hidden md:flex md:w-1/2 bg-[#09090b] p-12 flex-col items-center justify-center text-center relative overflow-hidden">
+                    <img src={logo} alt="SkillsSprint Logo" className="w-32 h-32 rounded-full mb-6 z-10 border border-white/5 shadow-2xl" />
+                    
+                    <div className="text-white text-3xl font-bold tracking-widest z-10 mb-4 whitespace-nowrap">
+                        SKILLS<span className="text-[#a78bfa]">SPRINT</span>
+                    </div>
+                    
+                    <p className="text-zinc-400 text-sm max-w-[280px] leading-relaxed z-10 font-light">
+                        Join thousands of learners achieving their goals with expert-led courses.
+                    </p>
+                </div>
             </div>
-             <div className='w-[50%] h-auto bg-black/40 hidden md:flex items-center justify-center flex-col relative'>
-              <div className="absolute inset-0 bg-gradient-to-bl from-purple-900/40 to-black/40"></div>
-              <img src={logo} className='w-32 rounded-full shadow-2xl z-10 mb-6' alt="" />
-              <div className='text-white text-3xl font-bold tracking-widest z-10 text-center'>
-                SKILLS<span className="text-purple-400">SPRINT</span>
-              </div>
-               <p className="text-gray-400 text-sm mt-4 z-10 max-w-xs text-center leading-relaxed">
-                 Join thousands of learners achieving their goals with us.
-               </p>
-            </div>
-           
         </div>
-     
-    </div>
-  )
-
+    )
 }
 
 export default SignUp

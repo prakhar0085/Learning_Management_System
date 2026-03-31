@@ -33,12 +33,8 @@ function ViewLecture() {
             if (res.data) {
                 setSelectedCourse(res.data);
                 
-                // Update currently selected lecture with fresh data (videoUrl)
-                if (selectedLecture) {
-                     const freshLecture = res.data.lectures?.find(l => l._id === selectedLecture._id);
-                     if (freshLecture) setSelectedLecture(freshLecture);
-                } else if (res.data.lectures?.length > 0) {
-                    // Initial selection if none
+                // Set initial selection if none exists
+                if (!selectedLecture && res.data.lectures?.length > 0) {
                     setSelectedLecture(res.data.lectures[0]);
                 }
             }
@@ -47,7 +43,7 @@ function ViewLecture() {
         }
     };
     fetchFreshData();
-  }, [courseId, selectedLecture]);
+  }, [courseId]); // Only fetch when courseId changes
 
   const courseCreator = userData?._id === selectedCourse?.creator ? userData : null;
 

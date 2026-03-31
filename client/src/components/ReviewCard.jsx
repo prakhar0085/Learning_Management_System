@@ -1,54 +1,46 @@
 import React from "react";
 import { FaStar } from "react-icons/fa6";
-import { FaRegStar, FaQuoteLeft } from "react-icons/fa";
 
 const ReviewCard = ({ text, name, image, rating, role }) => {
   const numRating = Number(rating) || 5;
 
   return (
-    <div className="group relative bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 max-w-sm w-full h-full flex flex-col justify-between overflow-hidden">
+    <div className="group relative bg-[#121214] p-6 rounded-none shadow-2xl border border-white/5 transition-all duration-500 hover:bg-[#18181b] hover:border-white/10 max-w-[320px] w-full h-fit flex flex-col justify-between overflow-hidden">
       
-      {/* Decorative Quote */}
-      <div className="absolute top-4 right-6 text-9xl text-indigo-50 dark:text-gray-700/30 font-serif opacity-50 pointer-events-none group-hover:scale-110 transition-transform duration-500">
-        ”
-      </div>
+      {/* Decorative Branding Line */}
+      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-zinc-800 to-transparent group-hover:via-white/20 transition-all duration-700" />
 
       <div className="relative z-10">
-        {/* ⭐ Rating Stars */}
-        <div className="flex items-center gap-1 mb-6">
-          <div className="flex p-2 bg-indigo-50 dark:bg-gray-700/50 rounded-full">
+        {/* ⭐ Rating Stars - Professional Monochrome */}
+        <div className="flex items-center gap-1 mb-5">
             {Array(5)
               .fill(0)
               .map((_, i) => (
-                <span key={i} className="text-sm">
-                  {i < numRating ? <FaStar className="text-yellow-400" /> : <FaRegStar className="text-gray-300 dark:text-gray-500" />}
+                <span key={i} className="text-[10px]">
+                  {i < numRating ? <FaStar className="text-white" /> : <FaStar className="text-zinc-800" />}
                 </span>
               ))}
-          </div>
         </div>
 
-        {/* 💬 Review Text */}
-        <p className="text-gray-600 dark:text-gray-300 text-base italic leading-relaxed mb-8 line-clamp-4">
+        {/* 💬 Review Text - Editorial Font */}
+        <p className="text-zinc-300 text-sm italic font-serif leading-relaxed mb-8 line-clamp-4 group-hover:text-white transition-colors duration-500">
           "{text}"
         </p>
       </div>
 
-      {/* 👤 Reviewer Info */}
-      <div className="relative z-10 flex items-center gap-4 mt-auto pt-6 border-t border-gray-100 dark:border-gray-700">
-        <div className="relative">
+      {/* 👤 Reviewer Info - Minimalist & Human Made */}
+      <div className="relative z-10 flex items-center gap-3.5 mt-auto pt-6 border-t border-white/5">
+        <div className="relative overflow-hidden shrink-0">
           <img
             src={image || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
             alt={name}
-            className="w-14 h-14 rounded-full object-cover ring-4 ring-gray-50 dark:ring-gray-700 group-hover:ring-indigo-100 dark:group-hover:ring-indigo-900 transition-all"
+            className="w-10 h-10 rounded-none object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 scale-110 group-hover:scale-100"
           />
-          <div className="absolute -bottom-1 -right-1 bg-indigo-500 text-white rounded-full p-1 border-2 border-white dark:border-gray-800">
-             <FaQuoteLeft className="text-[8px]" />
-          </div>
         </div>
         
-        <div>
-          <h4 className="font-bold text-gray-900 dark:text-white text-lg">{name}</h4>
-          <p className="text-sm text-indigo-600 dark:text-indigo-400 font-medium tracking-wide uppercase text-[10px]">{role || 'Student'}</p>
+        <div className="min-w-0">
+          <h4 className="font-bold text-white text-base tracking-tight leading-none mb-1 truncate">{name}</h4>
+          <p className="text-[9px] text-zinc-500 font-bold tracking-[0.2em] uppercase leading-none truncate">{role || 'Alumnus'}</p>
         </div>
       </div>
     </div>

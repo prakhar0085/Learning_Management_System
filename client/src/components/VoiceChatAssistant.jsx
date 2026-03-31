@@ -178,27 +178,28 @@ const VoiceChatAssistant = () => {
             
             {/* Chat Window */}
             {isOpen && (
-                <div className="mb-4 w-80 md:w-96 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-800 flex flex-col overflow-hidden pointer-events-auto transition-all duration-300 origin-bottom-right">
+                <div className="mb-4 w-80 md:w-96 bg-[#09090b] rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.8)] border border-white/5 flex flex-col overflow-hidden pointer-events-auto transition-all duration-300 origin-bottom-right">
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-indigo-600 to-violet-600 p-4 flex justify-between items-center text-white">
-                        <div className="flex items-center gap-2">
-                            <FaRobot className="text-xl" />
-                            <span className="font-bold">NeuroBot</span>
+                    <div className="bg-[#121214] border-b border-white/5 p-4 flex justify-between items-center text-white">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-purple-500/10 rounded-lg">
+                                <FaRobot className="text-xl text-[#a78bfa]" />
+                            </div>
+                            <span className="font-bold tracking-tight">NeuroBot</span>
                         </div>
-                        <button onClick={toggleChat} className="text-white hover:text-gray-200">
+                        <button onClick={toggleChat} className="text-zinc-500 hover:text-white transition-colors">
                             <FaTimes />
                         </button>
                     </div>
 
                     {/* Messages Area */}
-                    <div className="h-96 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900/50 space-y-4">
+                    <div className="h-96 overflow-y-auto p-4 bg-[#09090b] space-y-4 custom-scrollbar">
                         {messages.map((msg, idx) => (
-
                             <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                <div className={`max-w-[85%] p-3 rounded-2xl text-sm shadow-sm ${
+                                <div className={`max-w-[85%] p-3.5 rounded-2xl text-sm shadow-sm leading-relaxed ${
                                     msg.role === 'user' 
-                                    ? 'bg-indigo-600 text-white rounded-br-none' 
-                                    : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-bl-none border border-gray-100 dark:border-gray-700'
+                                    ? 'bg-[#8b5cf6] text-white rounded-br-none' 
+                                    : 'bg-[#18181b] text-zinc-100 rounded-bl-none border border-white/5'
                                 }`}>
                                     <ReactMarkdown 
                                         remarkPlugins={[remarkGfm]}
@@ -209,56 +210,63 @@ const VoiceChatAssistant = () => {
                                 </div>
                             </div>
                         ))}
-                         {isSpeaking && <div className="text-xs text-indigo-500 text-center animate-pulse">Speaking...</div>}
+                         {isSpeaking && (
+                            <div className="flex justify-center">
+                                <div className="px-3 py-1 bg-purple-500/10 rounded-full text-[10px] text-purple-400 font-medium tracking-wider uppercase animate-pulse border border-purple-500/20">
+                                    Speaking...
+                                </div>
+                            </div>
+                         )}
                         <div ref={chatEndRef} />
                     </div>
 
-
-
                     {/* Input Controls */}
-                    <div className="p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex items-center gap-2">
-                         <input
-                            type="text"
-                            value={inputText}
-                            onChange={(e) => setInputText(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleSendText()}
-                            placeholder="Type a message..."
-                            className="flex-1 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-                        />
+                    <div className="p-4 bg-[#121214] border-t border-white/5 flex items-center gap-3">
+                         <div className="flex-1 relative">
+                            <input
+                                type="text"
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSendText()}
+                                placeholder="Type a message..."
+                                className="w-full bg-[#18181b] border border-zinc-800 text-zinc-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500/50 transition-all placeholder-zinc-600"
+                            />
+                         </div>
 
-                        {/* Send Button (only if text exists) */}
-                        {inputText.trim() && (
-                            <button 
-                                onClick={handleSendText}
-                                className="p-3 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors shadow-md"
-                            >
-                                <FaPaperPlane className="text-sm" />
-                            </button>
-                        )}
-
-                        {/* Voice Controls (Mic or Stop) */}
-                        {isSpeaking ? (
-                             <button
-                                onClick={stopSpeaking}
-                                className="p-3 rounded-full bg-red-100 text-red-600 hover:bg-red-200 transition-colors shadow-sm"
-                                title="Stop Speaking"
-                             >
-                                <FaStop className="text-sm" />
-                             </button>
-                         ) : (
-                             <button 
-                                onClick={startListening}
-                                disabled={isListening}
-                                className={`p-3 rounded-full transition-all shadow-md ${
-                                    isListening 
-                                    ? 'bg-red-500 text-white animate-pulse ring-4 ring-red-200' 
-                                    : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                                }`}
-                                title="Speak"
-                            >
-                                <FaMicrophone className="text-sm" />
-                            </button>
-                         )}
+                        {/* Action Buttons */}
+                        <div className="flex items-center gap-2">
+                             {inputText.trim() ? (
+                                <button 
+                                    onClick={handleSendText}
+                                    className="p-3 bg-[#8b5cf6] text-white rounded-xl hover:bg-[#7c3aed] transition-all shadow-lg active:scale-95"
+                                >
+                                    <FaPaperPlane className="text-xs" />
+                                </button>
+                            ) : (
+                                isSpeaking ? (
+                                    <button
+                                        onClick={stopSpeaking}
+                                        className="p-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-all border border-red-500/20 shadow-sm active:scale-95"
+                                        title="Stop Speaking"
+                                    >
+                                        <FaStop className="text-xs" />
+                                    </button>
+                                ) : (
+                                    <button 
+                                        onClick={startListening}
+                                        disabled={isListening}
+                                        className={`p-3 rounded-xl transition-all shadow-md active:scale-95 border ${
+                                            isListening 
+                                            ? 'bg-red-500 text-white animate-pulse border-red-400' 
+                                            : 'bg-[#18181b] border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-600'
+                                        }`}
+                                        title="Speak"
+                                    >
+                                        <FaMicrophone className="text-xs" />
+                                    </button>
+                                )
+                            )}
+                        </div>
                     </div>
                 </div>
             )}

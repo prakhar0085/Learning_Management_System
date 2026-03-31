@@ -118,75 +118,99 @@ const handleEnroll = async (courseId, userId) => {
     
     const loadRazorpayScript = () => {
         return new Promise((resolve) => {
+            if (window.Razorpay) return resolve(true);
             const script = document.createElement('script');
+            script.id = 'razorpay-checkout-js';
             script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.async = true;
             script.onload = () => resolve(true);
             script.onerror = () => resolve(false);
             document.body.appendChild(script);
         });
     };
 
-    console.log("Order Data:", orderData);
-    
-    // Ensure script is loaded
-    if (!window.Razorpay) {
-        const isLoaded = await loadRazorpayScript();
-        if (!isLoaded) {
-            toast.error("Razorpay SDK failed to load. Check connection.");
-            return;
-        }
-    }
+    // Consolidate script management in ViewCourse
+    useEffect(() => {
+        loadRazorpayScript();
+        // Cleanup script on unmount to prevent lingering preloads
+        return () => {
+            const script = document.getElementById('razorpay-checkout-js');
+            if (script) {
+                script.remove();
+                if (window.Razorpay) delete window.Razorpay;
+            }
+        };
+    }, []);
 
-    console.log("Full Order Response:", orderData);
-    const { id: order_id, amount, currency } = orderData.data;
-
-    if (!order_id || !amount) {
-        toast.error("Invalid order data received from server.");
-        console.error("Missing order_id or amount", orderData.data);
-        return;
-    }
-
-    const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
-    if (!razorpayKey) {
-        toast.error("Razorpay Key is missing configuration");
-        console.error("VITE_RAZORPAY_KEY_ID is undefined");
-        return;
-    }
-
-    const options = {
-      key: razorpayKey, 
-      amount: amount,
-      currency: currency || "INR",
-      name: "Virtual Courses",
-      description: "Course Enrollment Payment",
-      order_id: order_id,
-      handler: async function (response) {
-        console.log("Razorpay Success Handler Triggered:", response);
+    const handleEnroll = async (courseId, userId) => {
         try {
-          const verifyRes = await axios.post(serverUrl + "/api/payment/verify-payment",{
-            ...response,       
-            courseId,
-            userId
-          }, { withCredentials: true });
-          
-          setIsEnrolled(true)
-          toast.success(verifyRes.data.message);
-        } catch (verifyError) {
-          toast.error("Payment verification failed.");
-          console.error("Verification Error:", verifyError);
+            // 1. Create Order
+            const orderData = await axios.post(serverUrl + "/api/payment/create-order", {
+                courseId,
+                userId
+            } , {withCredentials:true});
+            
+            // Ensure script is loaded
+            const isLoaded = await loadRazorpayScript();
+            if (!isLoaded) {
+                toast.error("Razorpay SDK failed to load. Check connection.");
+                return;
+            }
+
+            const { id: order_id, amount, currency } = orderData.data;
+
+            if (!order_id || !amount) {
+                toast.error("Invalid order data received from server.");
+                return;
+            }
+
+            const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
+            if (!razorpayKey) {
+                toast.error("Razorpay Key is missing configuration");
+                return;
+            }
+
+            const options = {
+                key: razorpayKey, 
+                amount: amount,
+                currency: currency || "INR",
+                name: "SkillsSprint",
+                description: "Course Enrollment Payment",
+                order_id: order_id,
+                handler: async function (response) {
+                    try {
+                        const verifyRes = await axios.post(serverUrl + "/api/payment/verify-payment",{
+                            ...response,       
+                            courseId,
+                            userId
+                        }, { withCredentials: true });
+                        
+                        setIsEnrolled(true)
+                        toast.success(verifyRes.data.message);
+                    } catch (verifyError) {
+                        toast.error("Payment verification failed.");
+                        console.error("Verification Error:", verifyError);
+                    }
+                },
+                prefill: {
+                    name: userData?.name,
+                    email: userData?.email,
+                },
+                theme: {
+                    color: "#8b5cf6" // Updated to match your new professional purple
+                }
+            };
+            
+            const rzp = new window.Razorpay(options)
+            rzp.on('payment.failed', function (response){
+                toast.error(`Payment Failed: ${response.error.description}`);
+            });
+            rzp.open()
+
+        } catch (err) {
+            toast.error("Something went wrong while enrolling.");
+            console.error("Enroll Error:", err);
         }
-      },
-      prefill: {
-        name: userData?.name,
-        email: userData?.email,
-        contact: "" // Add contact if available
-      },
-      notes: {
-        address: "Razorpay Corporate Office"
-      },
-      theme: {
-        color: "#3399cc"
-      }
     };
     
     console.log("Razorpay Options:", options);
