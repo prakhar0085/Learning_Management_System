@@ -170,7 +170,7 @@ console.log("Average Rating:", avgRating);
                         
                         setIsEnrolled(true);
                         toast.success(verifyRes.data.message);
-                    } catch (err) {
+                    } catch {
                         toast.error("Payment verification failed.");
                     }
                 },
@@ -185,7 +185,7 @@ console.log("Average Rating:", avgRating);
             rzp.on('payment.failed', (resp) => toast.error(`Failed: ${resp.error.description}`));
             rzp.open();
 
-        } catch (err) {
+        } catch {
             toast.error("Something went wrong during enrollment.");
         }
     };
